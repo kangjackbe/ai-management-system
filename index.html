@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="qjo9-00DTn-WbuZDQlzy_6DepAlVYFPsLDWydOW5UQg" />
+<title>AI 통합 관리 시스템 - 규칙 금고 + 바로가기</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:#eef2f7;color:#0f172a;line-height:1.7}
+header{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 55%,#0e7490 100%);color:#fff;padding:36px 20px 28px}
+header h1{margin:0 0 6px;font-size:36px;letter-spacing:-.5px}
+header p{margin:0;opacity:.92;max-width:780px}
+.wrap{max-width:880px;margin:0 auto;padding:20px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:24px;box-shadow:0 8px 30px rgba(15,23,42,.07);margin-bottom:16px}
+label{display:block;font-weight:800;margin:14px 0 6px}
+textarea,select,input[type=text],input[type=date]{width:100%;padding:13px;border:2px solid #cbd5e1;border-radius:12px;font-size:16px;line-height:1.6}
+textarea{min-height:90px}
+textarea:focus,select:focus,input:focus{outline:none;border-color:#0e7490;box-shadow:0 0 0 3px rgba(14,116,144,.15)}
+button.primary{background:#f59e0b;border:0;color:#0f172a;font-weight:800;padding:15px 18px;border-radius:12px;cursor:pointer;font-size:17px;width:100%;margin-top:14px}
+button.copy{background:#0f172a;color:#fff;border:0;padding:11px 14px;border-radius:10px;cursor:pointer;font-weight:700;margin-top:10px}
+button.secondary{background:#fff;border:2px solid #0f172a;color:#0f172a;padding:11px 14px;border-radius:10px;cursor:pointer;font-weight:700;margin-top:10px}
+button.danger{background:#fff;border:2px solid #dc2626;color:#dc2626;padding:11px 14px;border-radius:10px;cursor:pointer;font-weight:700;margin-top:10px}
+.out{white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:16px;margin-top:14px}
+.small{color:#475569;font-size:14px}
+.note{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:14px}
+.warn{background:#fef2f2;border:1px solid #fecaca;border-radius:14px;padding:14px}
+h2{margin-top:0;font-size:23px}
+h3{margin-bottom:6px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>div{flex:1;min-width:200px}
+.item{border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-top:10px}
+.item strong{display:block}
+.check{display:flex;gap:8px;align-items:flex-start;margin:8px 0;font-weight:400}
+.check input{margin-top:5px}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:14px}
+.ai-card{border:1px solid #e2e8f0;border-radius:14px;padding:14px;background:#f8fafc}
+.ai-card strong{display:block;font-size:17px}
+.ai-card span{color:#475569;font-size:14px}
+.ai-card a{display:inline-block;margin-top:10px;background:#0f172a;color:#fff;padding:9px 12px;border-radius:10px;text-decoration:none;font-weight:700}
+.cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.cat-tabs button{border:1px solid #cbd5e1;background:#fff;padding:10px 14px;border-radius:999px;font-weight:700;cursor:pointer}
+.cat-tabs button.active{background:#0f172a;color:#fff;border-color:#0f172a}
+.top-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;position:sticky;top:0;z-index:5;background:#eef2f7;padding:10px 0}
+.top-tabs button{border:1px solid #cbd5e1;background:#fff;color:#334155;padding:12px 15px;border-radius:999px;font-weight:700;cursor:pointer;font-size:15px}
+.top-tabs button.active{background:#0f172a;color:#fff;border-color:#0f172a}
+.hidden{display:none}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px}
+.stat{border:1px solid #e2e8f0;border-radius:14px;padding:14px;background:#f8fafc}
+.stat b{display:block;font-size:26px}
+.stat span{color:#475569;font-size:14px}
+.chip{display:inline-block;border:1px solid #cbd5e1;background:#fff;padding:8px 12px;border-radius:999px;font-weight:700;cursor:pointer;margin:4px 4px 0 0}
+.score{font-weight:800;color:#0e7490}
+.favbtn{background:#fff;border:1px solid #cbd5e1;border-radius:8px;cursor:pointer;padding:6px 9px;font-weight:700;margin-top:10px;margin-left:6px}
+@media(max-width:600px){header h1{font-size:30px}.card{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap" style="padding:0">
+<h1>AI 통합 관리 시스템</h1>
+<p>규칙 금고 + AI 바로가기. 내 취향, 금지선, 말투, 목표를 한 곳에 모아두고, 수많은 AI 사이트를 탭으로 정리해서 바로 열어.</p>
+</div>
+</header>
+
+<div class="wrap">
+<div class="top-tabs">
+<button type="button" class="topTab active" data-panel="panelAi">AI 바로가기</button>
+<button type="button" class="topTab" data-panel="panelDash">대시보드</button>
+<button type="button" class="topTab" data-panel="panelPrompts">프롬프트 보관함</button>
+<button type="button" class="topTab" data-panel="panelSubs">구독 관리</button>
+<button type="button" class="topTab" data-panel="panelProfile">프로필 / 개인정보</button>
+<button type="button" class="topTab" data-panel="panelRules">취향 / 금지선 / 목표</button>
+<button type="button" class="topTab" data-panel="panelAcc">계정 / 비밀번호</button>
+<button type="button" class="topTab" data-panel="panelManual">설명서 완성본</button>
+</div>
+
+<div id="panelAi">
+<section class="card">
+<h2>AI 바로가기</h2>
+<p class="small">찾고 싶은 AI 이름을 검색하면 바로가기가 나와. 카테고리 탭으로 나눠서 정리했어.</p>
+<label for="aiSearch">AI 사이트 검색</label>
+<input type="text" id="aiSearch" placeholder="예: 챗GPT, 이미지, 코딩" autocomplete="off">
+<div class="cat-tabs">
+<button type="button" class="catBtn active" data-cat="all">전체</button>
+<button type="button" class="catBtn" data-cat="chat">챗봇</button>
+<button type="button" class="catBtn" data-cat="image">이미지</button>
+<button type="button" class="catBtn" data-cat="video">영상</button>
+<button type="button" class="catBtn" data-cat="code">코딩</button>
+<button type="button" class="catBtn" data-cat="music">음악</button>
+<button type="button" class="catBtn" data-cat="work">작업</button>
+</div>
+<div id="aiGrid" class="ai-grid"></div>
+<p id="aiEmpty" class="small hidden">검색 결과가 없어. 다른 이름으로 검색해봐.</p>
+<label class="check"><input type="checkbox" id="favOnly"> 즐겨찾기만 보기</label>
+<h3>내 AI 사이트 추가</h3>
+<p class="small">자주 쓰는 AI가 목록에 없으면 직접 추가해. 추가한 사이트는 이 기기에만 저장돼.</p>
+<div class="row">
+<div><label for="customAiName">이름</label><input type="text" id="customAiName" placeholder="예: 새 AI 도구"></div>
+<div><label for="customAiUrl">주소 (https://...)</label><input type="text" id="customAiUrl" placeholder="https://example.com"></div>
+</div>
+<label for="customAiDesc">설명</label>
+<input type="text" id="customAiDesc" placeholder="예: 문서 요약 도구">
+<button type="button" class="secondary" id="addCustomAi">내 AI 추가하기</button>
+</section>
+
+
+
+</div>
+
+<div id="panelDash" class="hidden">
+<section class="card">
+<h2>대시보드</h2>
+<p class="small">내 AI 사용 현황을 한눈에. 숫자는 이 기기에 저장된 내용만으로 계산돼.</p>
+<div class="stat-grid">
+<div class="stat"><b id="statPrompts">0</b><span>저장한 프롬프트</span></div>
+<div class="stat"><b id="statFavs">0</b><span>즐겨찾는 AI</span></div>
+<div class="stat"><b id="statSubs">0</b><span>구독 중인 AI</span></div>
+<div class="stat"><b id="statCost">0원</b><span>월 구독 합계</span></div>
+<div class="stat"><b id="statCopies">0</b><span>복사한 횟수</span></div>
+<div class="stat"><b id="statSites">28</b><span>바로가기 AI 수</span></div>
+</div>
+<h3>곧 갱신되는 구독</h3>
+<div id="dashRenewal"><p class="small">갱신 예정인 구독이 없어.</p></div>
+<div class="row">
+<div><button type="button" class="secondary gotoTab" data-panel="panelPrompts">프롬프트 보관함 가기</button></div>
+<div><button type="button" class="secondary gotoTab" data-panel="panelSubs">구독 관리 가기</button></div>
+</div>
+</section>
+</div>
+<div id="panelPrompts" class="hidden">
+<section class="card">
+<h2>프롬프트 보관함</h2>
+<p class="small">잘 쓴 프롬프트를 저장해두고, 점수를 보고 다듬어. 저장한 건 이 기기에만 있어.</p>
+<h3>템플릿 (눌러서 채우기)</h3>
+<div>
+<button type="button" class="chip" data-tpl="study">공부 계획</button>
+<button type="button" class="chip" data-tpl="write">글쓰기</button>
+<button type="button" class="chip" data-tpl="code">코딩 질문</button>
+<button type="button" class="chip" data-tpl="summary">요약</button>
+<button type="button" class="chip" data-tpl="idea">아이디어</button>
+<button type="button" class="chip" data-tpl="translate">번역·다듬기</button>
+</div>
+<label for="pTitle">제목</label>
+<input type="text" id="pTitle" placeholder="예: 영어 단어 외우기 프롬프트">
+<label for="pCat">분야</label>
+<select id="pCat"><option value="공부">공부</option><option value="글쓰기">글쓰기</option><option value="코딩">코딩</option><option value="생활">생활</option><option value="기타">기타</option></select>
+<label for="pText">프롬프트 내용</label>
+<textarea id="pText" placeholder="AI에게 시킬 일을 구체적으로 적어봐. 역할, 목표, 형식을 적을수록 점수가 올라가."></textarea>
+<button type="button" class="primary" id="savePrompt">프롬프트 저장하기</button>
+<label for="promptSearch">보관함 검색</label>
+<input type="text" id="promptSearch" placeholder="제목이나 내용으로 검색">
+<div id="promptList"></div>
+</section>
+</div>
+<div id="panelSubs" class="hidden">
+<section class="card">
+<h2>구독 관리</h2>
+<p class="small">쓰고 있는 AI 구독을 한 곳에 모아. 금액과 갱신일은 직접 적는 거야. 은행이나 카드에 연결하지 않아.</p>
+<div class="row">
+<div><label for="subName">서비스 이름</label><input type="text" id="subName" placeholder="예: 챗봇 유료 플랜"></div>
+<div><label for="subPrice">월 요금 (원)</label><input type="text" id="subPrice" placeholder="예: 29000" inputmode="numeric"></div>
+</div>
+<div class="row">
+<div><label for="subDay">갱신일</label><input type="date" id="subDay"></div>
+<div><label for="subCat">종류</label><select id="subCat"><option value="챗봇">챗봇</option><option value="이미지">이미지</option><option value="영상">영상</option><option value="코딩">코딩</option><option value="음악">음악</option><option value="기타">기타</option></select></div>
+</div>
+<button type="button" class="primary" id="addSub">구독 추가하기</button>
+<h3>월 합계: <span id="subTotal">0원</span></h3>
+<div id="subList"></div>
+</section>
+</div>
+<div id="panelProfile" class="hidden">
+<section class="card">
+<h2>1. 프로필 / 개인정보</h2>
+<p class="small">AI가 나를 알아야 할 최소한만 적어. 별명만으로도 충분해. 빈칸이어도 설명서는 만들어져.</p>
+<div class="row">
+<div><label for="nickname">별명 (이름 대신)</label><input type="text" id="nickname" placeholder="예: 별명"></div>
+<div><label for="grade">학년 / 소속</label><input type="text" id="grade" placeholder="예: 중학생"></div>
+</div>
+<label for="interests">관심 분야</label>
+<input type="text" id="interests" placeholder="예: 독서, 운동, 음악">
+<label for="likes">좋아하는 것</label>
+<textarea id="likes" placeholder="예: 소설, 음악, 짧고 바로 쓸 수 있는 설명"></textarea>
+<label for="dislikes">싫어하는 것</label>
+<textarea id="dislikes" placeholder="예: 긴 줄글, 어려운 말만 가득한 설명"></textarea>
+
+<h3>내 정보 항목 (자유롭게 추가)</h3>
+<p class="small">일정, 메모, 목표처럼 자주 찾는 내 정보만 항목으로 추가해. 항목마다 이름과 내용만 적어.</p>
+<div class="row">
+<div><label for="infoName">항목 이름</label><input type="text" id="infoName" placeholder="예: 발표 준비"></div>
+<div><label for="infoDate">날짜 (있으면)</label><input type="date" id="infoDate"></div>
+</div>
+<label for="infoValue">내용</label>
+<input type="text" id="infoValue" placeholder="예: 발표 준비, 11월 10일">
+<button type="button" class="secondary" id="addInfo">항목 추가하기</button>
+<div id="infoList"></div>
+</section>
+
+</div>
+<div id="panelRules" class="hidden">
+<section class="card">
+<h2>2. 취향</h2>
+<label for="tone">말투</label>
+<select id="tone">
+<option value="친근하게, 짧고 직접적으로">친근하게, 짧고 직접적으로</option>
+<option value="정중하게">정중하게</option>
+<option value="간결하게, 핵심만">간결하게, 핵심만</option>
+<option value="선생님처럼 차근차근">선생님처럼 차근차근</option>
+</select>
+<label for="explainStyle">설명 방식</label>
+<select id="explainStyle">
+<option value="예시부터 보여주고, 그 다음 설명">예시부터 보여주고, 그 다음 설명</option>
+<option value="핵심 3줄 먼저, 그 다음 자세히">핵심 3줄 먼저, 그 다음 자세히</option>
+<option value="단계별로, 한 번에 한 가지만">단계별로, 한 번에 한 가지만</option>
+<option value="표로 정리해서">표로 정리해서</option>
+</select>
+<label for="answerLength">답변 길이</label>
+<select id="answerLength">
+<option value="짧게, 핵심만">짧게, 핵심만</option>
+<option value="적당히 자세하게">적당히 자세하게</option>
+<option value="자세하게, 예시까지">자세하게, 예시까지</option>
+</select>
+<label for="language">답변 언어</label>
+<select id="language">
+<option value="한국어">한국어</option>
+<option value="한국어, 어려운 영어 단어는 한국어로 풀어서">한국어, 어려운 영어 단어는 한국어로 풀어서</option>
+<option value="영어">영어</option>
+</select>
+</section>
+
+<section class="card">
+<h2>3. 금지선</h2>
+<p class="small">체크한 것만 설명서에 들어가. AI가 이 선을 넘으면 안 돼.</p>
+<label class="check"><input type="checkbox" id="banLie" checked> 모르는 내용을 지어내지 말 것. 모르면 모른다고 하고 확인할 방법을 알려줄 것.</label>
+<label class="check"><input type="checkbox" id="banSchool" checked> 학교 수행평가는 답을 그대로 만들지 말고, 방법만 알려줄 것.</label>
+<label class="check"><input type="checkbox" id="banPersonal" checked> 내 개인정보를 다른 사람이나 다른 AI에게 공유하지 말 것.</label>
+<label class="check"><input type="checkbox" id="banPay" checked> 내 돈으로 결제, 구독, 구매를 하지 말 것. 유료는 부모님 동의가 먼저.</label>
+<label class="check"><input type="checkbox" id="banLong" checked> 필요 없는 긴 줄글, 반복되는 말, 과한 칭찬은 하지 말 것.</label>
+<label for="banCustom">내가 직접 정하는 금지선</label>
+<textarea id="banCustom" placeholder="예: 내 말투를 함부로 바꾸지 말 것. 내 허락 없이 파일을 만들지 말 것."></textarea>
+</section>
+
+<section class="card">
+<h2>4. 목표</h2>
+<label for="goalNow">지금 가장 중요한 목표</label>
+<input type="text" id="goalNow" placeholder="예: 영어 공부 꾸준히 하기">
+<label for="goalYear">올해 목표</label>
+<input type="text" id="goalYear" placeholder="예: 새로운 취미 하나 배우기">
+<label for="goalProjects">지금 하고 있는 프로젝트</label>
+<textarea id="goalProjects" placeholder="예: 학교 프로젝트, 동아리 활동"></textarea>
+</section>
+
+</div>
+<div id="panelAcc" class="hidden">
+<section class="card">
+<h2>5. 계정 / 비밀번호</h2>
+<div class="row">
+<div><label for="accSite">사이트 / 서비스</label><input type="text" id="accSite" placeholder="예: 게임 사이트" autocomplete="off"></div>
+<div><label for="accId">아이디</label><input type="text" id="accId" placeholder="예: 별명" autocomplete="off"></div>
+</div>
+<label for="accPw">비밀번호</label>
+<div class="row">
+<div><input type="password" id="accPw" placeholder="비밀번호를 입력하세요" autocomplete="new-password"></div>
+<div style="flex:0 0 auto"><button type="button" class="secondary" id="togglePw">보기</button></div>
+</div>
+<label for="accMemo">메모 (있으면)</label>
+<input type="text" id="accMemo" placeholder="예: 8자 이상, 숫자 포함" autocomplete="off">
+<button type="button" class="secondary" id="addAcc">계정 추가하기</button>
+<div id="accList"></div>
+</section>
+
+</div>
+<div id="panelManual" class="hidden">
+<section class="card">
+<h2>6. 내 AI 사용 설명서 - 완성본</h2>
+<p class="small">위 카드를 채우면 아래 설명서가 자동으로 만들어져. 아무것도 안 채워도 기본 설명서는 나와. 이걸 복사해서 ChatGPT, Claude, Gemini 어디에든 붙여넣으면 돼.</p>
+<button type="button" class="primary" id="makeManual">설명서 만들기</button>
+<div id="manualOut" class="out">여기에 설명서가 나옵니다.</div>
+<button type="button" class="copy" id="copyManual">설명서 원클릭 복사하기</button>
+<button type="button" class="secondary" id="downloadManual">설명서 .txt로 내려받기</button>
+<button type="button" class="secondary" id="exampleFill">예시로 채우기</button>
+<button type="button" class="secondary" id="exportBtn">내 규칙 JSON으로 내보내기</button>
+<label for="importFile" style="margin-top:14px">내 규칙 JSON 가져오기</label>
+<input type="file" id="importFile" accept="application/json">
+<button type="button" class="danger" id="clearBtn">전부 지우기</button>
+<p class="small">저장 방식: 입력하면 바로 이 기기에만 자동 저장돼. 서버로 안 보내. 다른 기기에서는 안 보여.</p>
+</section>
+</div>
+</div>
+
+<script>
+const KEY = 'ai_rules_vault_v1';
+const ACC_KEY = 'ai_rules_vault_accounts_v1';
+const $ = (id) => document.getElementById(id);
+const FIELDS = ['nickname','grade','interests','likes','dislikes','tone','explainStyle','answerLength','language','banCustom','goalNow','goalYear','goalProjects'];
+const CHECKS = ['banLie','banSchool','banPersonal','banPay','banLong'];
+
+function loadData() {
+  try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; }
+}
+function saveData() {
+  const d = loadData();
+  FIELDS.forEach((f) => { d[f] = $(f).value; });
+  CHECKS.forEach((c) => { d[c] = $(c).checked; });
+  d.infos = infos;
+  try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
+}
+function restore() {
+  const d = loadData();
+  FIELDS.forEach((f) => { if (d[f] !== undefined && $(f)) $(f).value = d[f]; });
+  CHECKS.forEach((c) => { if (d[c] !== undefined && $(c)) $(c).checked = d[c]; });
+  infos = Array.isArray(d.infos) ? d.infos : [];
+  renderInfos();
+  try { accounts = JSON.parse(localStorage.getItem(ACC_KEY) || '[]'); } catch (e) { accounts = []; }
+  if (!Array.isArray(accounts)) accounts = [];
+  renderAccs();
+}
+let infos = [];
+let accounts = [];
+
+function saveAccs() {
+  try { localStorage.setItem(ACC_KEY, JSON.stringify(accounts)); } catch (e) {}
+}
+function renderAccs() {
+  const list = $('accList');
+  if (!list) return;
+  list.innerHTML = '';
+  accounts.forEach((a, i) => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    const strong = document.createElement('strong');
+    strong.textContent = a.site || '계정';
+    const idSpan = document.createElement('span');
+    idSpan.textContent = '아이디: ' + (a.id || '');
+    const pwSpan = document.createElement('span');
+    pwSpan.textContent = '비밀번호: ' + '•'.repeat(8);
+    const memoSpan = document.createElement('span');
+    memoSpan.textContent = a.memo ? '메모: ' + a.memo : '';
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button'; copyBtn.className = 'copy'; copyBtn.textContent = '비밀번호 복사';
+    copyBtn.addEventListener('click', () => { copyText(a.pw || ''); });
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button'; delBtn.className = 'secondary'; delBtn.textContent = '삭제';
+    delBtn.addEventListener('click', () => { accounts.splice(i, 1); saveAccs(); renderAccs(); });
+    div.appendChild(strong); div.appendChild(document.createElement('br'));
+    div.appendChild(idSpan); div.appendChild(document.createElement('br'));
+    div.appendChild(pwSpan); div.appendChild(document.createElement('br'));
+    if (a.memo) { div.appendChild(memoSpan); div.appendChild(document.createElement('br')); }
+    div.appendChild(copyBtn); div.appendChild(delBtn);
+    list.appendChild(div);
+  });
+}
+
+function renderInfos() {
+  const list = $('infoList');
+  list.innerHTML = '';
+  infos.forEach((it, i) => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    const strong = document.createElement('strong');
+    strong.textContent = it.name + (it.date ? ' (' + it.date + ')' : '');
+    const span = document.createElement('span');
+    span.textContent = it.value || '';
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'secondary'; btn.textContent = '삭제';
+    btn.addEventListener('click', () => { infos.splice(i, 1); saveData(); renderInfos(); });
+    div.appendChild(strong); div.appendChild(span); div.appendChild(document.createElement('br')); div.appendChild(btn);
+    list.appendChild(div);
+  });
+}
+
+function copyTextFallback(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); alert('복사했어요. AI에 붙여넣으세요.'); } catch (e) { alert('복사가 안 돼요. 글을 길게 눌러서 직접 복사해주세요.'); }
+  document.body.removeChild(ta);
+}
+function bumpCopies() {
+  try { const st = JSON.parse(localStorage.getItem('ai_mgmt_stats_v1') || '{}'); st.copies = (st.copies || 0) + 1; localStorage.setItem('ai_mgmt_stats_v1', JSON.stringify(st)); } catch (e) {}
+  if ($('statCopies')) renderDash();
+}
+function copyText(text) {
+  bumpCopies();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => alert('복사했어요. AI에 붙여넣으세요.')).catch(() => copyTextFallback(text));
+  } else { copyTextFallback(text); }
+}
+
+function buildManual() {
+  const who = $('nickname').value.trim() ? '나는 ' + $('nickname').value.trim() + '야.' : '나는 이 설명서의 사용자야.';
+  const grade = $('grade').value.trim() ? ' (' + $('grade').value.trim() + ')' : '';
+  const lines = [];
+  lines.push('[내 AI 사용 설명서]');
+  lines.push('');
+  lines.push(who + grade);
+  if ($('interests').value.trim()) lines.push('관심 분야: ' + $('interests').value.trim());
+  if ($('likes').value.trim()) lines.push('좋아하는 것: ' + $('likes').value.trim());
+  if ($('dislikes').value.trim()) lines.push('싫어하는 것: ' + $('dislikes').value.trim());
+  lines.push('');
+  lines.push('[말투와 설명]');
+  lines.push('말투: ' + $('tone').value);
+  lines.push('설명 방식: ' + $('explainStyle').value);
+  lines.push('답변 길이: ' + $('answerLength').value);
+  lines.push('언어: ' + $('language').value);
+  lines.push('');
+  lines.push('[금지선 - 절대 넘지 말 것]');
+  const bans = [];
+  if ($('banLie').checked) bans.push('모르는 내용을 지어내지 말 것. 모르면 모른다고 하고 확인할 방법을 알려줄 것.');
+  if ($('banSchool').checked) bans.push('학교 수행평가는 답을 그대로 만들지 말고, 방법만 알려줄 것.');
+  if ($('banPersonal').checked) bans.push('내 개인정보를 다른 사람이나 다른 AI에게 공유하지 말 것.');
+  if ($('banPay').checked) bans.push('내 돈으로 결제, 구독, 구매를 하지 말 것. 유료는 부모님 동의가 먼저.');
+  if ($('banLong').checked) bans.push('필요 없는 긴 줄글, 반복되는 말, 과한 칭찬은 하지 말 것.');
+  if ($('banCustom').value.trim()) bans.push($('banCustom').value.trim());
+  bans.forEach((b, i) => lines.push((i + 1) + '. ' + b));
+  if (infos.length) {
+    lines.push('');
+    lines.push('[내 정보]');
+    infos.forEach((it) => lines.push('- ' + it.name + (it.date ? ' (' + it.date + ')' : '') + ': ' + (it.value || '')));
+  }
+  lines.push('');
+  lines.push('[목표]');
+  if ($('goalNow').value.trim()) lines.push('지금 목표: ' + $('goalNow').value.trim());
+  if ($('goalYear').value.trim()) lines.push('올해 목표: ' + $('goalYear').value.trim());
+  if ($('goalProjects').value.trim()) lines.push('프로젝트: ' + $('goalProjects').value.trim());
+  lines.push('');
+  lines.push('이 설명서를 모든 답변에 적용해줘. 모호한 요청이어도 질문으로 되돌리지 말고, 가장 일반적인 경우를 가정하고 바로 답해줘. 결과는 반드시 끝까지 완성해줘.');
+  return lines.join('\n');
+}
+
+document.querySelectorAll('input, textarea, select').forEach((el) => {
+  el.addEventListener('input', saveData);
+  el.addEventListener('change', saveData);
+});
+
+$('addInfo').addEventListener('click', () => {
+  const name = $('infoName').value.trim();
+  const value = $('infoValue').value.trim();
+  if (!name && !value) { alert('항목 이름이나 내용을 적어주세요.'); return; }
+  infos.push({ name: name || '항목', date: $('infoDate').value, value: value });
+  $('infoName').value = ''; $('infoValue').value = ''; $('infoDate').value = '';
+  saveData(); renderInfos();
+});
+
+$('togglePw').addEventListener('click', () => {
+  const pw = $('accPw');
+  const show = pw.type === 'password';
+  pw.type = show ? 'text' : 'password';
+  $('togglePw').textContent = show ? '숨기기' : '보기';
+});
+$('addAcc').addEventListener('click', () => {
+  const site = $('accSite').value.trim();
+  const id = $('accId').value.trim();
+  const pw = $('accPw').value;
+  if (!site && !id && !pw) { alert('사이트, 아이디, 비밀번호 중 하나라도 적어주세요.'); return; }
+  if (pw && pw.length < 8) { if (!confirm('비밀번호가 8자보다 짧아요. 그래도 저장할까요?')) return; }
+  accounts.push({ site: site || '계정', id: id, pw: pw, memo: $('accMemo').value.trim() });
+  $('accSite').value = ''; $('accId').value = ''; $('accPw').value = ''; $('accMemo').value = '';
+  $('accPw').type = 'password'; $('togglePw').textContent = '보기';
+  saveAccs(); renderAccs();
+});
+
+$('makeManual').addEventListener('click', () => { $('manualOut').textContent = buildManual(); });
+$('copyManual').addEventListener('click', () => {
+  let text = $('manualOut').textContent;
+  if (!text || text.includes('여기에')) { text = buildManual(); $('manualOut').textContent = text; }
+  copyText(text);
+});
+$('downloadManual').addEventListener('click', () => {
+  const text = buildManual();
+  $('manualOut').textContent = text;
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'my-ai-manual.txt'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+$('exampleFill').addEventListener('click', () => {
+  $('nickname').value = '사용자';
+  $('grade').value = '학생';
+  $('interests').value = '독서, 운동, 음악';
+  $('likes').value = '짧고 바로 쓸 수 있는 설명, 예시부터 보여주는 방식';
+  $('dislikes').value = '긴 줄글, 어려운 말만 가득한 설명';
+  $('goalNow').value = '영어 공부 꾸준히 하기';
+  $('goalYear').value = '새로운 취미 하나 배우기';
+  $('goalProjects').value = '학교 프로젝트, 동아리 활동';
+  saveData(); $('manualOut').textContent = buildManual();
+});
+$('exportBtn').addEventListener('click', () => {
+  saveData();
+  const blob = new Blob([localStorage.getItem(KEY) || '{}'], { type: 'application/json;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'ai-rules-vault.json'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+$('importFile').addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const d = JSON.parse(reader.result);
+      localStorage.setItem(KEY, JSON.stringify(d));
+      restore(); alert('가져왔어요.');
+    } catch (err) { alert('JSON 파일이 아니에요. 내보낸 파일만 가져올 수 있어요.'); }
+  };
+  reader.readAsText(file);
+});
+$('clearBtn').addEventListener('click', () => {
+  if (!confirm('정말 전부 지울까요? 기기에 저장된 규칙, 내 정보, 계정 비밀번호까지 다 지워져요.')) return;
+  localStorage.removeItem(KEY);
+  localStorage.removeItem(ACC_KEY);
+  localStorage.removeItem(PROMPT_KEY); localStorage.removeItem(SUB_KEY); localStorage.removeItem(FAV_KEY); localStorage.removeItem(CUSTOM_KEY); localStorage.removeItem('ai_mgmt_stats_v1');
+  prompts = []; subs = []; favs = []; customAis = []; renderPrompts(); renderSubs(); renderDash(); renderAi();
+  accounts = [];
+  renderAccs();
+  infos = [];
+  FIELDS.forEach((f) => { $(f).value = ''; });
+  $('tone').value = '친근하게, 짧고 직접적으로';
+  $('explainStyle').value = '예시부터 보여주고, 그 다음 설명';
+  $('answerLength').value = '짧게, 핵심만';
+  $('language').value = '한국어';
+  CHECKS.forEach((c) => { $(c).checked = true; });
+  renderInfos(); $('manualOut').textContent = '여기에 설명서가 나옵니다.';
+});
+
+
+const AI_SITES = [
+  {name:'ChatGPT', desc:'대화, 글쓰기, 코딩, 이미지', cat:'chat', url:'https://chatgpt.com'},
+  {name:'Claude', desc:'긴 글, 분석, 코딩', cat:'chat', url:'https://claude.ai'},
+  {name:'Gemini', desc:'구글 AI, 검색과 연동', cat:'chat', url:'https://gemini.google.com/app'},
+  {name:'Grok', desc:'엑스 AI, 최신 소식', cat:'chat', url:'https://grok.com'},
+  {name:'Perplexity', desc:'검색 기반 답변, 출처 표시', cat:'chat', url:'https://www.perplexity.ai'},
+  {name:'Copilot', desc:'마이크로소프트 AI 도우미', cat:'chat', url:'https://copilot.microsoft.com'},
+  {name:'DeepSeek', desc:'추론, 코딩, 긴 분석', cat:'chat', url:'https://chat.deepseek.com'},
+  {name:'Mistral', desc:'빠른 대화, 유럽 AI', cat:'chat', url:'https://chat.mistral.ai'},
+  {name:'Meta AI', desc:'메타 AI, 대화와 이미지', cat:'chat', url:'https://www.meta.ai'},
+  {name:'Midjourney', desc:'이미지 생성', cat:'image', url:'https://www.midjourney.com'},
+  {name:'Leonardo AI', desc:'이미지, 게임 아트', cat:'image', url:'https://leonardo.ai'},
+  {name:'Ideogram', desc:'글자 들어간 이미지', cat:'image', url:'https://ideogram.ai'},
+  {name:'Adobe Firefly', desc:'어도비 이미지 생성', cat:'image', url:'https://firefly.adobe.com'},
+  {name:'Canva AI', desc:'디자인, 발표, 이미지', cat:'image', url:'https://www.canva.com'},
+  {name:'Runway', desc:'영상 생성, 편집', cat:'video', url:'https://runwayml.com'},
+  {name:'Pika', desc:'짧은 영상 생성', cat:'video', url:'https://pika.art'},
+  {name:'Kling', desc:'영상 생성', cat:'video', url:'https://klingai.com'},
+  {name:'Luma', desc:'영상, 3D 장면', cat:'video', url:'https://lumalabs.ai'},
+  {name:'CapCut', desc:'영상 편집', cat:'video', url:'https://www.capcut.com'},
+  {name:'Cursor', desc:'AI 코드 편집기', cat:'code', url:'https://cursor.com'},
+  {name:'GitHub Copilot', desc:'코드 자동 완성', cat:'code', url:'https://github.com/features/copilot'},
+  {name:'Replit', desc:'브라우저 코딩, 앱 만들기', cat:'code', url:'https://replit.com'},
+  {name:'v0', desc:'말로 웹사이트 만들기', cat:'code', url:'https://v0.app'},
+  {name:'Bolt', desc:'말로 앱 만들기', cat:'code', url:'https://bolt.new'},
+  {name:'Suno', desc:'노래 만들기', cat:'music', url:'https://suno.com'},
+  {name:'Udio', desc:'음악 만들기', cat:'music', url:'https://www.udio.com'},
+  {name:'Notion AI', desc:'문서, 정리, 메모', cat:'work', url:'https://www.notion.com'},
+  {name:'Grammarly', desc:'영어 글 다듬기', cat:'work', url:'https://www.grammarly.com'}
+];
+let aiCat = 'all';
+function renderAi() {
+  const q = ($('aiSearch').value || '').trim().toLowerCase();
+  const grid = $('aiGrid');
+  grid.innerHTML = '';
+  let count = 0;
+  const favOnly = $('favOnly') && $('favOnly').checked;
+  AI_SITES.concat(customAis).forEach((s) => {
+    if (favOnly && !favs.includes(s.name)) return;
+    if (s.custom) { /* custom site */ }
+    const matchCat = aiCat === 'all' || s.cat === aiCat;
+    const matchQ = !q || s.name.toLowerCase().includes(q) || s.desc.includes(q) || s.cat.includes(q);
+    if (!matchCat || !matchQ) return;
+    count++;
+    const div = document.createElement('div');
+    div.className = 'ai-card';
+    const strong = document.createElement('strong');
+    strong.textContent = s.name;
+    const span = document.createElement('span');
+    span.textContent = s.desc;
+    const a = document.createElement('a');
+    a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '바로가기';
+    div.appendChild(strong); div.appendChild(document.createElement('br'));
+    div.appendChild(span); div.appendChild(document.createElement('br'));
+    div.appendChild(a);
+    const favBtn = document.createElement('button');
+    favBtn.type = 'button'; favBtn.className = 'favbtn'; favBtn.textContent = favs.includes(s.name) ? '★ 즐겨찾기' : '☆ 즐겨찾기';
+    favBtn.addEventListener('click', () => {
+      const i = favs.indexOf(s.name);
+      if (i >= 0) favs.splice(i, 1); else favs.push(s.name);
+      saveJson(FAV_KEY, favs); renderAi(); renderDash();
+    });
+    div.appendChild(favBtn);
+    if (s.custom) {
+      const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'favbtn'; delBtn.textContent = '삭제';
+      delBtn.addEventListener('click', () => { customAis = customAis.filter((x) => x.name !== s.name); saveJson(CUSTOM_KEY, customAis); renderAi(); renderDash(); });
+      div.appendChild(delBtn);
+    }
+    grid.appendChild(div);
+  });
+  $('aiEmpty').classList.toggle('hidden', count > 0);
+}
+document.querySelectorAll('.catBtn').forEach((b) => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.catBtn').forEach((x) => x.classList.remove('active'));
+    b.classList.add('active');
+    aiCat = b.dataset.cat;
+    renderAi();
+  });
+});
+$('aiSearch').addEventListener('input', renderAi);
+renderAi();
+
+
+
+// ---- 시장 분석 기반 추가 기능: 대시보드 / 프롬프트 보관함 / 구독 관리 / 즐겨찾기 ----
+const PROMPT_KEY = 'ai_mgmt_prompts_v1';
+const SUB_KEY = 'ai_mgmt_subs_v1';
+const FAV_KEY = 'ai_mgmt_favs_v1';
+const CUSTOM_KEY = 'ai_mgmt_custom_ai_v1';
+let prompts = [], subs = [], favs = [], customAis = [];
+function loadJson(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return Array.isArray(v) ? v : fallback; } catch (e) { return fallback; } }
+function saveJson(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+function scorePrompt(t) {
+  let s = 0; const why = [];
+  if (t.length >= 80) { s += 25; why.push('충분히 구체적'); } else if (t.length >= 30) { s += 12; why.push('조금 더 구체적으로'); }
+  if (/너는|당신은|역할|전문가|선생님/.test(t)) { s += 20; why.push('역할 지정'); }
+  if (/표|목록|단계|형식|구조/.test(t)) { s += 20; why.push('형식 지정'); }
+  if (/예를 들어|예시|예: /.test(t)) { s += 15; why.push('예시 포함'); }
+  if (/해줘|만들어|알려줘|정리해|써줘/.test(t)) { s += 20; why.push('목표 명확'); }
+  return { score: Math.min(100, s), why: why.length ? why.join(', ') : '역할·형식·예시를 더하면 점수가 올라가' };
+}
+const TEMPLATES = {
+  study: '너는 친절한 공부 코치야. [과목]을 [기간] 안에 끝낼 공부 계획을 세워줘. 하루 분량을 표로 정리하고, 매일 확인할 체크리스트도 만들어줘.',
+  write: '너는 글쓰기 도우미야. 주제 [주제]로 [독자]가 읽기 좋은 글을 써줘. 첫 문장은 흥미를 끌게, 전체는 3단락으로, 마지막에 한 줄 요약을 넣어줘.',
+  code: '너는 코딩 도우미야. [언어]로 [하고 싶은 일]을 하는 코드를 짜줘. 코드마다 한 줄씩 주석을 달고, 흔한 실수 2가지를 알려줘.',
+  summary: '아래 글을 핵심만 3줄로 요약해줘. 그 다음 중요한 내용을 표로 정리하고, 모르는 단어가 있으면 쉽게 풀어줘.\n\n[여기에 글 붙여넣기]',
+  idea: '주제 [주제]로 참신한 아이디어 5개를 내줘. 각각 한 줄 설명과, 가장 먼저 해볼 만한 이유를 붙여줘.',
+  translate: '아래 문장을 자연스러운 한국어로 다듬어줘. 뜻이 바뀌지 않게 하고, 어색한 표현 3가지는 왜 어색한지 알려줘.\n\n[여기에 문장 붙여넣기]'
+};
+function renderPrompts() {
+  const list = $('promptList'); if (!list) return;
+  const q = ($('promptSearch').value || '').trim().toLowerCase();
+  list.innerHTML = '';
+  const shown = prompts.filter((p) => !q || (p.title + ' ' + p.text).toLowerCase().includes(q));
+  if (!shown.length) { list.innerHTML = '<p class="small">저장한 프롬프트가 없어. 템플릿으로 시작해봐.</p>'; return; }
+  shown.forEach((p) => {
+    const idx = prompts.indexOf(p);
+    const sc = scorePrompt(p.text);
+    const div = document.createElement('div'); div.className = 'item';
+    const strong = document.createElement('strong'); strong.textContent = p.title + ' · ' + p.cat;
+    const score = document.createElement('span'); score.className = 'score'; score.textContent = ' 점수 ' + sc.score + '점 (' + sc.why + ')';
+    const pre = document.createElement('div'); pre.textContent = p.text; pre.style.whiteSpace = 'pre-wrap'; pre.style.marginTop = '6px';
+    const copyBtn = document.createElement('button'); copyBtn.type = 'button'; copyBtn.className = 'copy'; copyBtn.textContent = '복사';
+    copyBtn.addEventListener('click', () => copyText(p.text));
+    const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'secondary'; delBtn.textContent = '삭제';
+    delBtn.addEventListener('click', () => { prompts.splice(idx, 1); saveJson(PROMPT_KEY, prompts); renderPrompts(); renderDash(); });
+    div.appendChild(strong); div.appendChild(score); div.appendChild(pre);
+    div.appendChild(document.createElement('br')); div.appendChild(copyBtn); div.appendChild(delBtn);
+    list.appendChild(div);
+  });
+}
+function renderSubs() {
+  const list = $('subList'); if (!list) return;
+  const total = subs.reduce((a, b) => a + (Number(b.price) || 0), 0);
+  $('subTotal').textContent = total.toLocaleString('ko-KR') + '원';
+  list.innerHTML = '';
+  if (!subs.length) { list.innerHTML = '<p class="small">등록한 구독이 없어.</p>'; return; }
+  const sorted = subs.slice().sort((a, b) => (a.day || '9999').localeCompare(b.day || '9999'));
+  sorted.forEach((sb) => {
+    const idx = subs.indexOf(sb);
+    const div = document.createElement('div'); div.className = 'item';
+    const strong = document.createElement('strong'); strong.textContent = sb.name + ' · ' + sb.cat;
+    let days = '';
+    if (sb.day) { const d = Math.ceil((new Date(sb.day + 'T00:00:00') - new Date()) / 86400000); days = d >= 0 ? ' · 갱신까지 ' + d + '일' : ' · 갱신일 지남'; }
+    const info = document.createElement('span'); info.textContent = '월 ' + (Number(sb.price) || 0).toLocaleString('ko-KR') + '원' + days + ' · 사용 ' + (sb.uses || 0) + '회' + ((sb.uses || 0) > 0 ? ' · 1회당 ' + Math.round((Number(sb.price) || 0) / sb.uses).toLocaleString('ko-KR') + '원' : '');
+    const useBtn = document.createElement('button'); useBtn.type = 'button'; useBtn.className = 'copy'; useBtn.textContent = '사용 기록 +1';
+    useBtn.addEventListener('click', () => { sb.uses = (sb.uses || 0) + 1; saveJson(SUB_KEY, subs); renderSubs(); renderDash(); });
+    const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'secondary'; delBtn.textContent = '삭제';
+    delBtn.addEventListener('click', () => { subs.splice(idx, 1); saveJson(SUB_KEY, subs); renderSubs(); renderDash(); });
+    div.appendChild(strong); div.appendChild(document.createElement('br')); div.appendChild(info);
+    div.appendChild(document.createElement('br')); div.appendChild(useBtn); div.appendChild(delBtn);
+    list.appendChild(div);
+  });
+}
+function renderDash() {
+  if (!$('statPrompts')) return;
+  const total = subs.reduce((a, b) => a + (Number(b.price) || 0), 0);
+  let copies = 0; try { copies = (JSON.parse(localStorage.getItem('ai_mgmt_stats_v1') || '{}').copies || 0); } catch (e) {}
+  $('statPrompts').textContent = prompts.length;
+  $('statFavs').textContent = favs.length;
+  $('statSubs').textContent = subs.length;
+  $('statCost').textContent = total.toLocaleString('ko-KR') + '원';
+  $('statCopies').textContent = copies;
+  $('statSites').textContent = AI_SITES.length + customAis.length;
+  const soon = subs.filter((sb) => sb.day && Math.ceil((new Date(sb.day + 'T00:00:00') - new Date()) / 86400000) <= 7);
+  $('dashRenewal').innerHTML = soon.length ? soon.map((sb) => '<p>· ' + sb.name + ' — ' + sb.day + '</p>').join('') : '<p class="small">7일 안에 갱신되는 구독이 없어.</p>';
+}
+function loadNewFeatures() {
+  prompts = loadJson(PROMPT_KEY, []); subs = loadJson(SUB_KEY, []); favs = loadJson(FAV_KEY, []); customAis = loadJson(CUSTOM_KEY, []);
+  renderPrompts(); renderSubs(); renderDash();
+}
+document.querySelectorAll('.chip[data-tpl]').forEach((b) => {
+  b.addEventListener('click', () => { $('pText').value = TEMPLATES[b.dataset.tpl] || ''; if (!$('pTitle').value) $('pTitle').value = b.textContent + ' 프롬프트'; });
+});
+$('savePrompt').addEventListener('click', () => {
+  const text = $('pText').value.trim(); if (!text) { alert('프롬프트 내용을 적어주세요.'); return; }
+  prompts.unshift({ title: $('pTitle').value.trim() || '제목 없는 프롬프트', cat: $('pCat').value, text: text });
+  saveJson(PROMPT_KEY, prompts); $('pTitle').value = ''; $('pText').value = ''; renderPrompts(); renderDash();
+});
+$('promptSearch').addEventListener('input', renderPrompts);
+$('addSub').addEventListener('click', () => {
+  const name = $('subName').value.trim(); if (!name) { alert('서비스 이름을 적어주세요.'); return; }
+  subs.push({ name: name, price: Number($('subPrice').value.replace(/[^0-9]/g, '')) || 0, day: $('subDay').value, cat: $('subCat').value, uses: 0 });
+  saveJson(SUB_KEY, subs); $('subName').value = ''; $('subPrice').value = ''; $('subDay').value = ''; renderSubs(); renderDash();
+});
+$('addCustomAi').addEventListener('click', () => {
+  const name = $('customAiName').value.trim(); const url = $('customAiUrl').value.trim();
+  if (!name || !url) { alert('이름과 주소를 둘 다 적어주세요.'); return; }
+  if (!/^https?:\/\//.test(url)) { alert('주소는 https:// 로 시작해야 해.'); return; }
+  customAis.push({ name: name, desc: $('customAiDesc').value.trim() || '내가 추가한 AI', cat: 'work', url: url, custom: true });
+  saveJson(CUSTOM_KEY, customAis); $('customAiName').value = ''; $('customAiUrl').value = ''; $('customAiDesc').value = ''; renderAi(); renderDash();
+});
+$('favOnly').addEventListener('change', renderAi);
+document.querySelectorAll('.gotoTab').forEach((b) => {
+  b.addEventListener('click', () => { document.querySelector('.topTab[data-panel="' + b.dataset.panel + '"]').click(); });
+});
+
+document.querySelectorAll('.topTab').forEach((b) => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.topTab').forEach((x) => x.classList.remove('active'));
+    b.classList.add('active');
+    ['panelAi','panelDash','panelPrompts','panelSubs','panelProfile','panelRules','panelAcc','panelManual'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('hidden', id !== b.dataset.panel);
+    });
+    if (b.dataset.panel === 'panelDash') renderDash();
+    if (b.dataset.panel === 'panelPrompts') renderPrompts();
+    if (b.dataset.panel === 'panelSubs') renderSubs();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+loadNewFeatures();
+restore();
+$('manualOut').textContent = buildManual();
+</script>
+</body>
+</html>
