@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kangjackbe.github.io/ai-management-system/sitemap.xml

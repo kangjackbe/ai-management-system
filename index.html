@@ -4,7 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-site-verification" content="qjo9-00DTn-WbuZDQlzy_6DepAlVYFPsLDWydOW5UQg" />
-<title>AI 통합 관리 시스템 - 규칙 금고 + 바로가기</title>
+<meta name="description" content="내 취향, 금지선, 목표를 한 곳에 모아두는 AI 통합 관리 시스템. AI 바로가기, 프롬프트 보관함, 구독 관리까지." />
+<meta name="keywords" content="AI 관리, 프롬프트 보관함, AI 바로가기, 구독 관리, AI 규칙" />
+<meta property="og:title" content="intaim" />
+<meta property="og:description" content="내 취향, 금지선, 목표를 한 곳에. AI 바로가기, 프롬프트 보관함, 구독 관리까지 한 번에." />
+<meta property="og:type" content="website" />
+<link rel="canonical" href="https://kangjackbe.github.io/ai-management-system/" />
+<title>intaim - AI 통합 관리 시스템</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:#eef2f7;color:#0f172a;line-height:1.7}
@@ -52,23 +58,46 @@ h3{margin-bottom:6px}
 .chip{display:inline-block;border:1px solid #cbd5e1;background:#fff;padding:8px 12px;border-radius:999px;font-weight:700;cursor:pointer;margin:4px 4px 0 0}
 .score{font-weight:800;color:#0e7490}
 .favbtn{background:#fff;border:1px solid #cbd5e1;border-radius:8px;cursor:pointer;padding:6px 9px;font-weight:700;margin-top:10px;margin-left:6px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+td,th{border:1px solid #e2e8f0;padding:8px;text-align:left;font-size:14px}
+.ads-slot{border:2px dashed #cbd5e1;border-radius:12px;padding:16px;text-align:center;color:#64748b;margin-top:14px;background:#f8fafc}
+.week{display:flex;gap:6px;align-items:flex-end;height:90px;margin-top:10px}
+.week div{flex:1;background:#0e7490;border-radius:6px 6px 0 0;min-height:4px}
+.week span{flex:1;text-align:center;font-size:11px;color:#475569}
+body.dark{background:#0f172a;color:#e2e8f0}
+body.dark .card{background:#1e293b;border-color:#334155}
+body.dark .ai-card{background:#1e293b;border-color:#334155}
+body.dark input,body.dark textarea,body.dark select{background:#0f172a;color:#e2e8f0;border-color:#475569}
+body.dark .top-tabs{background:#0f172a}
+body.dark .top-tabs button{background:#1e293b;color:#e2e8f0;border-color:#475569}
+body.dark .small,body.dark .ai-card span{color:#94a3b8}
+body.dark .out{background:#0f172a;border-color:#334155}
+body.dark .item{border-color:#334155}
+body.dark .ads-slot{background:#1e293b;border-color:#475569}
 @media(max-width:600px){header h1{font-size:30px}.card{padding:18px}}
 </style>
 </head>
 <body>
 <header>
 <div class="wrap" style="padding:0">
-<h1>AI 통합 관리 시스템</h1>
-<p>규칙 금고 + AI 바로가기. 내 취향, 금지선, 말투, 목표를 한 곳에 모아두고, 수많은 AI 사이트를 탭으로 정리해서 바로 열어.</p>
+<h1>intaim</h1>
+<button type="button" class="secondary" id="darkBtn" style="margin-top:12px">다크 모드</button>
+<p>AI 통합 관리 시스템. 내 취향, 금지선, 말투, 목표를 한 곳에 모아두는 곳. 자주 쓰는 AI 사이트도 탭으로 정리했어.</p>
 </div>
 </header>
 
 <div class="wrap">
+<div id="sharedBox" class="card hidden">
+<h2>공유받은 프롬프트</h2>
+<p class="small">누가 공유한 프롬프트야. 복사해서 네 AI에 붙여넣으면 돼.</p>
+<div id="sharedText" class="out"></div>
+<button type="button" class="copy" id="copyShared">이 프롬프트 복사하기</button>
+</div>
 <div class="top-tabs">
 <button type="button" class="topTab active" data-panel="panelAi">AI 바로가기</button>
 <button type="button" class="topTab" data-panel="panelDash">대시보드</button>
 <button type="button" class="topTab" data-panel="panelPrompts">프롬프트 보관함</button>
-<button type="button" class="topTab" data-panel="panelSubs">구독 관리</button>
+<button type="button" class="topTab" data-panel="panelLinks">링크 저장함</button>
 <button type="button" class="topTab" data-panel="panelProfile">프로필 / 개인정보</button>
 <button type="button" class="topTab" data-panel="panelRules">취향 / 금지선 / 목표</button>
 <button type="button" class="topTab" data-panel="panelAcc">계정 / 비밀번호</button>
@@ -78,7 +107,7 @@ h3{margin-bottom:6px}
 <div id="panelAi">
 <section class="card">
 <h2>AI 바로가기</h2>
-<p class="small">찾고 싶은 AI 이름을 검색하면 바로가기가 나와. 카테고리 탭으로 나눠서 정리했어.</p>
+<p class="small">이름으로 검색하거나 카테고리로 골라봐.</p>
 <label for="aiSearch">AI 사이트 검색</label>
 <input type="text" id="aiSearch" placeholder="예: 챗GPT, 이미지, 코딩" autocomplete="off">
 <div class="cat-tabs">
@@ -94,7 +123,7 @@ h3{margin-bottom:6px}
 <p id="aiEmpty" class="small hidden">검색 결과가 없어. 다른 이름으로 검색해봐.</p>
 <label class="check"><input type="checkbox" id="favOnly"> 즐겨찾기만 보기</label>
 <h3>내 AI 사이트 추가</h3>
-<p class="small">자주 쓰는 AI가 목록에 없으면 직접 추가해. 추가한 사이트는 이 기기에만 저장돼.</p>
+<p class="small">자주 쓰는 AI가 목록에 없으면 직접 추가해.</p>
 <div class="row">
 <div><label for="customAiName">이름</label><input type="text" id="customAiName" placeholder="예: 새 AI 도구"></div>
 <div><label for="customAiUrl">주소 (https://...)</label><input type="text" id="customAiUrl" placeholder="https://example.com"></div>
@@ -102,6 +131,17 @@ h3{margin-bottom:6px}
 <label for="customAiDesc">설명</label>
 <input type="text" id="customAiDesc" placeholder="예: 문서 요약 도구">
 <button type="button" class="secondary" id="addCustomAi">내 AI 추가하기</button>
+<h3>챗봇 비교</h3>
+<p class="small">요금은 바뀔 수 있어. 정확한 건 공식 사이트에서 확인해.</p>
+<table>
+<tr><th>이름</th><th>무료</th><th>잘하는 것</th></tr>
+<tr><td>ChatGPT</td><td>있음</td><td>글쓰기, 코딩, 대화</td></tr>
+<tr><td>Claude</td><td>있음</td><td>긴 글, 분석</td></tr>
+<tr><td>Gemini</td><td>있음</td><td>구글 검색 연동</td></tr>
+<tr><td>Perplexity</td><td>있음</td><td>출처 있는 검색 답변</td></tr>
+<tr><td>DeepSeek</td><td>있음</td><td>추론, 코딩</td></tr>
+</table>
+<div class="ads-slot" id="adSlotAi">광고 자리 — AdSense 승인 후 표시돼</div>
 </section>
 
 
@@ -111,28 +151,47 @@ h3{margin-bottom:6px}
 <div id="panelDash" class="hidden">
 <section class="card">
 <h2>대시보드</h2>
-<p class="small">내 AI 사용 현황을 한눈에. 숫자는 이 기기에 저장된 내용만으로 계산돼.</p>
+<p class="small">내 사용 현황을 한눈에.</p>
 <div class="stat-grid">
 <div class="stat"><b id="statPrompts">0</b><span>저장한 프롬프트</span></div>
 <div class="stat"><b id="statFavs">0</b><span>즐겨찾는 AI</span></div>
-<div class="stat"><b id="statSubs">0</b><span>구독 중인 AI</span></div>
-<div class="stat"><b id="statCost">0원</b><span>월 구독 합계</span></div>
 <div class="stat"><b id="statCopies">0</b><span>복사한 횟수</span></div>
 <div class="stat"><b id="statSites">28</b><span>바로가기 AI 수</span></div>
+<div class="stat"><b id="statStreak">1</b><span>연속 방문 일수</span></div>
 </div>
-<h3>곧 갱신되는 구독</h3>
-<div id="dashRenewal"><p class="small">갱신 예정인 구독이 없어.</p></div>
+<h3>전체 검색</h3>
+<label for="dashSearch">프롬프트, 구독, AI를 한 번에 검색</label>
+<input type="text" id="dashSearch" placeholder="예: 영어, 챗봇, 구독 이름">
+<div id="dashSearchOut"></div>
+<h3>최근 AI 비교 기록</h3>
+<div id="compareList"><p class="small">아직 비교한 기록이 없어. 프롬프트 보관함에서 "3곳 비교"를 눌러봐.</p></div>
+<h3>최근 7일 복사 횟수</h3>
+<div class="week" id="weekChart"></div>
+<h3>최근 복사 기록</h3>
+<div id="historyList"><p class="small">아직 복사한 기록이 없어.</p></div>
+<h3>즐겨찾는 AI 바로 열기</h3>
+<div id="quickFavs"><p class="small">즐겨찾기가 없어. AI 카드에서 ★를 눌러봐.</p></div>
 <div class="row">
 <div><button type="button" class="secondary gotoTab" data-panel="panelPrompts">프롬프트 보관함 가기</button></div>
-<div><button type="button" class="secondary gotoTab" data-panel="panelSubs">구독 관리 가기</button></div>
 </div>
+</section>
+<section class="card">
+<h2>수익 설정 (광고)</h2>
+<p class="small">AdSense 승인을 받으면 여기에 광고가 나와. 승인 전에는 광고 자리가 비어 보여. AdSense 계정은 18세 이상만 만들 수 있어.</p>
+<label for="adsensePub">AdSense 게시자 ID (pub-로 시작, 승인 후에 입력)</label>
+<input type="text" id="adsensePub" placeholder="예: pub-1234567890123456" autocomplete="off">
+<button type="button" class="secondary" id="saveAds">게시자 ID 저장하기</button>
+<div class="ads-slot" id="adSlotDash">광고 자리 — AdSense 승인 후 표시돼</div>
 </section>
 </div>
 <div id="panelPrompts" class="hidden">
 <section class="card">
 <h2>프롬프트 보관함</h2>
-<p class="small">잘 쓴 프롬프트를 저장해두고, 점수를 보고 다듬어. 저장한 건 이 기기에만 있어.</p>
+<p class="small">잘 쓴 프롬프트를 저장해두고, 점수를 보고 다듬어봐.</p>
 <h3>템플릿 (눌러서 채우기)</h3>
+<label for="tplSelect">템플릿 30개에서 고르기</label>
+<select id="tplSelect"></select>
+<button type="button" class="secondary" id="loadTpl">템플릿 불러오기</button>
 <div>
 <button type="button" class="chip" data-tpl="study">공부 계획</button>
 <button type="button" class="chip" data-tpl="write">글쓰기</button>
@@ -148,32 +207,49 @@ h3{margin-bottom:6px}
 <label for="pText">프롬프트 내용</label>
 <textarea id="pText" placeholder="AI에게 시킬 일을 구체적으로 적어봐. 역할, 목표, 형식을 적을수록 점수가 올라가."></textarea>
 <button type="button" class="primary" id="savePrompt">프롬프트 저장하기</button>
+<button type="button" class="secondary" id="exportPromptsCsv">보관함 CSV로 내보내기</button>
 <label for="promptSearch">보관함 검색</label>
 <input type="text" id="promptSearch" placeholder="제목이나 내용으로 검색">
 <div id="promptList"></div>
 </section>
-</div>
-<div id="panelSubs" class="hidden">
 <section class="card">
-<h2>구독 관리</h2>
-<p class="small">쓰고 있는 AI 구독을 한 곳에 모아. 금액과 갱신일은 직접 적는 거야. 은행이나 카드에 연결하지 않아.</p>
-<div class="row">
-<div><label for="subName">서비스 이름</label><input type="text" id="subName" placeholder="예: 챗봇 유료 플랜"></div>
-<div><label for="subPrice">월 요금 (원)</label><input type="text" id="subPrice" placeholder="예: 29000" inputmode="numeric"></div>
+<h2>어려운 말 풀이</h2>
+<p class="small">AI 답장이나 글을 붙여넣으면 어려운 말을 쉽게 풀어줘. 디지털이 약한 사람도 바로 알 수 있게.</p>
+<label for="easyInput">AI 답장이나 글 붙여넣기</label>
+<textarea id="easyInput" placeholder="예: 이 프롬프트는 LLM의 컨텍스트를 활용해 할루시네이션을 줄여줘."></textarea>
+<button type="button" class="primary" id="easyBtn">쉽게 풀어주기</button>
+<div id="easyOut" class="out">여기에 쉬운 풀이가 나와.</div>
+</section>
 </div>
+<div id="panelLinks" class="hidden">
+<section class="card">
+<h2>URL 단축</h2>
+<p class="small">긴 주소를 짧게 줄여줘. 먼저 무료 단축(is.gd)으로 줄이고, 안 되면 intaim 공유 링크로 만들어.</p>
+<label for="shortUrl">줄일 주소</label>
+<input type="text" id="shortUrl" placeholder="https://example.com/very/long/address" autocomplete="off">
+<button type="button" class="primary" id="shortenBtn">짧게 줄이기</button>
+<div id="shortOut" class="out">여기에 짧은 주소가 나와.</div>
+<button type="button" class="copy" id="copyShort">짧은 주소 복사하기</button>
+</section>
+<section class="card">
+<h2>링크 저장함</h2>
+<p class="small">자주 여는 링크를 저장해둬. 제목으로 검색할 수 있어.</p>
 <div class="row">
-<div><label for="subDay">갱신일</label><input type="date" id="subDay"></div>
-<div><label for="subCat">종류</label><select id="subCat"><option value="챗봇">챗봇</option><option value="이미지">이미지</option><option value="영상">영상</option><option value="코딩">코딩</option><option value="음악">음악</option><option value="기타">기타</option></select></div>
+<div><label for="linkTitle">제목</label><input type="text" id="linkTitle" placeholder="예: 학교 홈페이지"></div>
+<div><label for="linkUrl">주소 (https://...)</label><input type="text" id="linkUrl" placeholder="https://example.com" autocomplete="off"></div>
 </div>
-<button type="button" class="primary" id="addSub">구독 추가하기</button>
-<h3>월 합계: <span id="subTotal">0원</span></h3>
-<div id="subList"></div>
+<label for="linkMemo">메모 (있으면)</label>
+<input type="text" id="linkMemo" placeholder="예: 매일 아침 확인">
+<button type="button" class="primary" id="saveLink">링크 저장하기</button>
+<label for="linkSearch">저장한 링크 검색</label>
+<input type="text" id="linkSearch" placeholder="제목이나 메모로 검색">
+<div id="linkList"></div>
 </section>
 </div>
 <div id="panelProfile" class="hidden">
 <section class="card">
 <h2>1. 프로필 / 개인정보</h2>
-<p class="small">AI가 나를 알아야 할 최소한만 적어. 별명만으로도 충분해. 빈칸이어도 설명서는 만들어져.</p>
+<p class="small">별명만으로도 충분해. 빈칸이어도 돼.</p>
 <div class="row">
 <div><label for="nickname">별명 (이름 대신)</label><input type="text" id="nickname" placeholder="예: 별명"></div>
 <div><label for="grade">학년 / 소속</label><input type="text" id="grade" placeholder="예: 중학생"></div>
@@ -231,7 +307,7 @@ h3{margin-bottom:6px}
 
 <section class="card">
 <h2>3. 금지선</h2>
-<p class="small">체크한 것만 설명서에 들어가. AI가 이 선을 넘으면 안 돼.</p>
+<p class="small">체크한 것만 설명서에 들어가.</p>
 <label class="check"><input type="checkbox" id="banLie" checked> 모르는 내용을 지어내지 말 것. 모르면 모른다고 하고 확인할 방법을 알려줄 것.</label>
 <label class="check"><input type="checkbox" id="banSchool" checked> 학교 수행평가는 답을 그대로 만들지 말고, 방법만 알려줄 것.</label>
 <label class="check"><input type="checkbox" id="banPersonal" checked> 내 개인정보를 다른 사람이나 다른 AI에게 공유하지 말 것.</label>
@@ -249,6 +325,12 @@ h3{margin-bottom:6px}
 <input type="text" id="goalYear" placeholder="예: 새로운 취미 하나 배우기">
 <label for="goalProjects">지금 하고 있는 프로젝트</label>
 <textarea id="goalProjects" placeholder="예: 학교 프로젝트, 동아리 활동"></textarea>
+<h3>목표 체크리스트</h3>
+<label class="check"><input type="checkbox" class="goalTask"> 이번 주 목표 1개 정하기</label>
+<label class="check"><input type="checkbox" class="goalTask"> 매일 10분씩 하기</label>
+<label class="check"><input type="checkbox" class="goalTask"> 결과 정리해서 저장하기</label>
+<div style="background:#e2e8f0;border-radius:999px;height:14px;margin-top:10px"><div id="goalBar" style="background:#0e7490;height:14px;border-radius:999px;width:0%"></div></div>
+<p class="small" id="goalPct">진행률 0%</p>
 </section>
 
 </div>
@@ -274,7 +356,7 @@ h3{margin-bottom:6px}
 <div id="panelManual" class="hidden">
 <section class="card">
 <h2>6. 내 AI 사용 설명서 - 완성본</h2>
-<p class="small">위 카드를 채우면 아래 설명서가 자동으로 만들어져. 아무것도 안 채워도 기본 설명서는 나와. 이걸 복사해서 ChatGPT, Claude, Gemini 어디에든 붙여넣으면 돼.</p>
+<p class="small">위 칸을 채우면 아래 설명서가 만들어져. 복사해서 자주 쓰는 AI에 붙여넣으면 돼.</p>
 <button type="button" class="primary" id="makeManual">설명서 만들기</button>
 <div id="manualOut" class="out">여기에 설명서가 나옵니다.</div>
 <button type="button" class="copy" id="copyManual">설명서 원클릭 복사하기</button>
@@ -283,8 +365,19 @@ h3{margin-bottom:6px}
 <button type="button" class="secondary" id="exportBtn">내 규칙 JSON으로 내보내기</button>
 <label for="importFile" style="margin-top:14px">내 규칙 JSON 가져오기</label>
 <input type="file" id="importFile" accept="application/json">
+<button type="button" class="secondary" id="backupBtn">전부 백업하기 (규칙+프롬프트+구독+즐겨찾기)</button>
+<label for="importAllFile" style="margin-top:14px">백업 파일 가져오기</label>
+<input type="file" id="importAllFile" accept="application/json">
 <button type="button" class="danger" id="clearBtn">전부 지우기</button>
-<p class="small">저장 방식: 입력하면 바로 이 기기에만 자동 저장돼. 서버로 안 보내. 다른 기기에서는 안 보여.</p>
+<p class="small">입력하면 바로 이 기기에만 저장돼. 서버로 안 보내.</p>
+</section>
+<section class="card">
+<h2>개인정보 처리방침</h2>
+<p class="small">이 사이트는 서버가 없어. 입력한 규칙, 프롬프트, 구독 정보, 계정 정보는 모두 사용자의 기기(localStorage)에만 저장되고, 어디에도 보내지 않아. 비밀번호는 설명서 복사나 JSON 내보내기에 포함되지 않아. 광고(AdSense)를 쓰게 되면 구글에서 쿠키를 사용할 수 있어.</p>
+</section>
+<section class="card">
+<h2>사용법</h2>
+<p class="small">1. 프로필과 취향, 금지선을 채워. 2. 설명서 완성본에서 복사해서 자주 쓰는 AI에 붙여넣어. 3. 잘 쓴 프롬프트는 보관함에 저장하고 점수를 봐. 4. 쓰는 AI 구독은 구독 관리에 적어두면 월 합계와 갱신일을 한눈에 볼 수 있어.</p>
 </section>
 </div>
 </div>
@@ -293,6 +386,27 @@ h3{margin-bottom:6px}
 const KEY = 'ai_rules_vault_v1';
 const ACC_KEY = 'ai_rules_vault_accounts_v1';
 const $ = (id) => document.getElementById(id);
+// intaim 공유 링크 (#go=...)로 들어오면 해당 주소로 이동
+(function () {
+  try {
+    const h = location.hash || '';
+    if (h.indexOf('#go=') === 0) {
+      const b64 = h.slice(4).replace(/-/g, '+').replace(/_/g, '/');
+      const url = decodeURIComponent(escape(window.atob(b64)));
+      if (/^https?:\/\//.test(url)) location.replace(url);
+    }
+    if (h.indexOf('#p=') === 0) {
+      try {
+        const b64 = h.slice(3).replace(/-/g, '+').replace(/_/g, '/');
+        const data = JSON.parse(decodeURIComponent(escape(window.atob(b64))));
+        window.__sharedPrompt = data.x || '';
+        const box = document.getElementById('sharedBox');
+        const txt = document.getElementById('sharedText');
+        if (box && txt) { txt.textContent = (data.t ? data.t + '\n\n' : '') + (data.x || ''); box.classList.remove('hidden'); }
+      } catch (e) {}
+    }
+  } catch (e) {}
+})();
 const FIELDS = ['nickname','grade','interests','likes','dislikes','tone','explainStyle','answerLength','language','banCustom','goalNow','goalYear','goalProjects'];
 const CHECKS = ['banLie','banSchool','banPersonal','banPay','banLong'];
 
@@ -303,6 +417,7 @@ function saveData() {
   const d = loadData();
   FIELDS.forEach((f) => { d[f] = $(f).value; });
   CHECKS.forEach((c) => { d[c] = $(c).checked; });
+  d.goalTasks = Array.from(document.querySelectorAll('.goalTask')).map((x) => x.checked);
   d.infos = infos;
   try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {}
 }
@@ -311,6 +426,8 @@ function restore() {
   FIELDS.forEach((f) => { if (d[f] !== undefined && $(f)) $(f).value = d[f]; });
   CHECKS.forEach((c) => { if (d[c] !== undefined && $(c)) $(c).checked = d[c]; });
   infos = Array.isArray(d.infos) ? d.infos : [];
+  if (Array.isArray(d.goalTasks)) document.querySelectorAll('.goalTask').forEach((x, i) => { x.checked = !!d.goalTasks[i]; });
+  updateGoalProgress();
   renderInfos();
   try { accounts = JSON.parse(localStorage.getItem(ACC_KEY) || '[]'); } catch (e) { accounts = []; }
   if (!Array.isArray(accounts)) accounts = [];
@@ -318,6 +435,8 @@ function restore() {
 }
 let infos = [];
 let accounts = [];
+let prompts = [], subs = [], favs = [], customAis = []; // renderAi()보다 먼저 선언해야 함 (TDZ 오류 방지)
+let editingIdx = null;
 
 function saveAccs() {
   try { localStorage.setItem(ACC_KEY, JSON.stringify(accounts)); } catch (e) {}
@@ -373,27 +492,61 @@ function renderInfos() {
 function copyTextFallback(text) {
   const ta = document.createElement('textarea');
   ta.value = text; document.body.appendChild(ta); ta.select();
-  try { document.execCommand('copy'); alert('복사했어요. AI에 붙여넣으세요.'); } catch (e) { alert('복사가 안 돼요. 글을 길게 눌러서 직접 복사해주세요.'); }
+  try { document.execCommand('copy'); alert('복사했어.'); } catch (e) { alert('복사가 안 돼. 글을 길게 눌러서 직접 복사해줘.'); }
   document.body.removeChild(ta);
 }
-function bumpCopies() {
-  try { const st = JSON.parse(localStorage.getItem('ai_mgmt_stats_v1') || '{}'); st.copies = (st.copies || 0) + 1; localStorage.setItem('ai_mgmt_stats_v1', JSON.stringify(st)); } catch (e) {}
+function bumpCopies(text) {
+  try {
+    const st = JSON.parse(localStorage.getItem('ai_mgmt_stats_v1') || '{}');
+    st.copies = (st.copies || 0) + 1;
+    const day = new Date().toISOString().slice(0, 10);
+    st.days = st.days || {}; st.days[day] = (st.days[day] || 0) + 1;
+    localStorage.setItem('ai_mgmt_stats_v1', JSON.stringify(st));
+    if (text) {
+      let h = []; try { h = JSON.parse(localStorage.getItem('ai_mgmt_history_v1') || '[]'); } catch (e) {}
+      h.unshift({ t: Date.now(), text: String(text).slice(0, 40) });
+      localStorage.setItem('ai_mgmt_history_v1', JSON.stringify(h.slice(0, 20)));
+    }
+  } catch (e) {}
   if ($('statCopies')) renderDash();
+  renderHistory(); renderWeek();
+}
+function renderHistory() {
+  const el = $('historyList'); if (!el) return;
+  let h = []; try { h = JSON.parse(localStorage.getItem('ai_mgmt_history_v1') || '[]'); } catch (e) {}
+  if (!h.length) { el.innerHTML = '<p class="small">아직 복사한 기록이 없어.</p>'; return; }
+  el.innerHTML = h.map((x) => '<p class="small">· ' + new Date(x.t).toLocaleString('ko-KR') + ' — ' + x.text.replace(/</g, '&lt;') + '</p>').join('');
+}
+function renderWeek() {
+  const el = $('weekChart'); if (!el) return;
+  let days = {}; try { days = (JSON.parse(localStorage.getItem('ai_mgmt_stats_v1') || '{}').days || {}); } catch (e) {}
+  const labels = [], vals = [];
+  for (let i = 6; i >= 0; i--) { const d = new Date(Date.now() - i * 86400000); const k = d.toISOString().slice(0, 10); labels.push((d.getMonth() + 1) + '/' + d.getDate()); vals.push(days[k] || 0); }
+  const max = Math.max.apply(null, vals.concat([1]));
+  el.innerHTML = vals.map((v) => '<div style="height:' + Math.max(4, Math.round(v / max * 80)) + 'px" title="' + v + '회"></div>').join('') + '</div><div style="display:flex;gap:6px">' + labels.map((l) => '<span>' + l + '</span>').join('') + '</div>';
+}
+function updateGoalProgress() {
+  const boxes = Array.from(document.querySelectorAll('.goalTask'));
+  if (!boxes.length) return;
+  const done = boxes.filter((x) => x.checked).length;
+  const pct = Math.round(done / boxes.length * 100);
+  $('goalBar').style.width = pct + '%';
+  $('goalPct').textContent = '진행률 ' + pct + '% (' + done + '/' + boxes.length + ')';
 }
 function copyText(text) {
-  bumpCopies();
+  bumpCopies(text);
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => alert('복사했어요. AI에 붙여넣으세요.')).catch(() => copyTextFallback(text));
+    navigator.clipboard.writeText(text).then(() => alert('복사했어.')).catch(() => copyTextFallback(text));
   } else { copyTextFallback(text); }
 }
 
 function buildManual() {
-  const who = $('nickname').value.trim() ? '나는 ' + $('nickname').value.trim() + '야.' : '나는 이 설명서의 사용자야.';
+  const who = $('nickname').value.trim() ? '나는 ' + $('nickname').value.trim() + '야.' : '';
   const grade = $('grade').value.trim() ? ' (' + $('grade').value.trim() + ')' : '';
   const lines = [];
   lines.push('[내 AI 사용 설명서]');
   lines.push('');
-  lines.push(who + grade);
+  if (who) lines.push(who + grade);
   if ($('interests').value.trim()) lines.push('관심 분야: ' + $('interests').value.trim());
   if ($('likes').value.trim()) lines.push('좋아하는 것: ' + $('likes').value.trim());
   if ($('dislikes').value.trim()) lines.push('싫어하는 것: ' + $('dislikes').value.trim());
@@ -424,7 +577,7 @@ function buildManual() {
   if ($('goalYear').value.trim()) lines.push('올해 목표: ' + $('goalYear').value.trim());
   if ($('goalProjects').value.trim()) lines.push('프로젝트: ' + $('goalProjects').value.trim());
   lines.push('');
-  lines.push('이 설명서를 모든 답변에 적용해줘. 모호한 요청이어도 질문으로 되돌리지 말고, 가장 일반적인 경우를 가정하고 바로 답해줘. 결과는 반드시 끝까지 완성해줘.');
+  lines.push('이 설명서를 참고해줘. 모호하면 가장 일반적인 경우로 바로 답해줘.');
   return lines.join('\n');
 }
 
@@ -509,7 +662,7 @@ $('clearBtn').addEventListener('click', () => {
   if (!confirm('정말 전부 지울까요? 기기에 저장된 규칙, 내 정보, 계정 비밀번호까지 다 지워져요.')) return;
   localStorage.removeItem(KEY);
   localStorage.removeItem(ACC_KEY);
-  localStorage.removeItem(PROMPT_KEY); localStorage.removeItem(SUB_KEY); localStorage.removeItem(FAV_KEY); localStorage.removeItem(CUSTOM_KEY); localStorage.removeItem('ai_mgmt_stats_v1');
+  localStorage.removeItem(PROMPT_KEY); localStorage.removeItem(SUB_KEY); localStorage.removeItem(FAV_KEY); localStorage.removeItem(CUSTOM_KEY); localStorage.removeItem('ai_mgmt_stats_v1'); localStorage.removeItem(LINKS_KEY);
   prompts = []; subs = []; favs = []; customAis = []; renderPrompts(); renderSubs(); renderDash(); renderAi();
   accounts = [];
   renderAccs();
@@ -614,7 +767,6 @@ const PROMPT_KEY = 'ai_mgmt_prompts_v1';
 const SUB_KEY = 'ai_mgmt_subs_v1';
 const FAV_KEY = 'ai_mgmt_favs_v1';
 const CUSTOM_KEY = 'ai_mgmt_custom_ai_v1';
-let prompts = [], subs = [], favs = [], customAis = [];
 function loadJson(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return Array.isArray(v) ? v : fallback; } catch (e) { return fallback; } }
 function saveJson(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
 function scorePrompt(t) {
@@ -626,6 +778,38 @@ function scorePrompt(t) {
   if (/해줘|만들어|알려줘|정리해|써줘/.test(t)) { s += 20; why.push('목표 명확'); }
   return { score: Math.min(100, s), why: why.length ? why.join(', ') : '역할·형식·예시를 더하면 점수가 올라가' };
 }
+const TEMPLATES30 = {
+  '공부 계획': '너는 친절한 공부 코치야. [과목]을 [기간] 안에 끝낼 공부 계획을 세워줘. 하루 분량을 표로 정리하고, 매일 확인할 체크리스트도 만들어줘.',
+  '단어 외우기': '너는 영어 선생님이야. [단어 목록]을 외우기 쉽게 그룹으로 나눠줘. 각 그룹마다 연상법 하나씩, 마지막에 5문제 퀴즈를 내줘.',
+  '개념 설명': '[개념]을 초등학생도 알 수 있게 쉽게 설명해줘. 비유 하나, 예시 하나, 헷갈리기 쉬운 점 하나를 넣어줘.',
+  '문제 풀이': '아래 문제를 단계별로 풀어줘. 각 단계마다 왜 그렇게 하는지 한 줄로 설명하고, 마지막에 답을 확인하는 방법을 알려줘.\n\n[여기에 문제 붙여넣기]',
+  '요약 노트': '아래 내용을 시험 대비 요약 노트로 만들어줘. 핵심만 표로 정리하고, 외워야 할 부분은 따로 표시해줘.\n\n[여기에 내용 붙여넣기]',
+  '시험 대비': '너는 시험 대비 코치야. [과목] [범위] 시험을 [며칠] 앞두고 있어. 남은 기간 하루 계획을 짜주고, 자주 나오는 유형 5개를 뽑아줘.',
+  '블로그 글': '[주제]로 블로그 글을 써줘. 첫 문장은 흥미를 끌게, 전체는 3단락으로, 마지막에 한 줄 요약을 넣어줘.',
+  '자기소개': '너는 자기소개 도우미야. [이름/별명], [관심사], [목표]로 5줄 자기소개를 써줘. 친근하게, 과장 없이.',
+  '이메일 쓰기': '[받는 사람]에게 보낼 이메일을 써줘. 목적은 [목적]이야. 정중하게, 짧게, 제목도 하나 지어줘.',
+  '소설 시작': '[주제]로 소설 첫 장면을 써줘. 주인공, 장소, 사건을 첫 5문장 안에 보여주고, 궁금하게 끝내줘.',
+  '발표 대본': '[주제] 발표 대본을 1분 분량으로 써줘. 시작은 질문 하나로, 중간에 예시 하나, 끝은 한 줄 정리로.',
+  '리뷰 쓰기': '[책/영화/제품] 리뷰를 써줘. 좋았던 점 2개, 아쉬웠던 점 1개, 누구에게 추천하는지까지.',
+  '코드 설명': '아래 코드를 한 줄씩 설명해줘. 어려운 부분은 쉽게 풀어서, 전체 흐름을 마지막에 3줄로 정리해줘.\n\n[여기에 코드 붙여넣기]',
+  '버그 찾기': '아래 코드에서 버그를 찾아줘. 어디가 왜 문제인지, 어떻게 고치는지, 고친 코드를 보여줘.\n\n[여기에 코드 붙여넣기]',
+  '코드 짜기': '[언어]로 [하고 싶은 일]을 하는 코드를 짜줘. 코드마다 한 줄씩 주석을 달고, 흔한 실수 2가지를 알려줘.',
+  'SQL 질문': '[테이블 설명]을 보고 [원하는 결과]를 뽑는 SQL을 짜줘. 쿼리마다 한 줄 설명을 붙여줘.',
+  '정규식': '[찾고 싶은 패턴]을 찾는 정규식을 만들어줘. 각 부분이 뭘 뜻하는지 설명하고, 예시 3개를 보여줘.',
+  '테스트 코드': '[기능]을 확인하는 테스트 코드 3개를 짜줘. 정상 경우, 비어 있는 경우, 잘못된 입력 경우를 각각.',
+  '여행 계획': '[장소]로 [며칠] 여행 계획을 짜줘. 하루 일정, 예상 비용, 챙길 것 목록을 표로 정리해줘.',
+  '식단 짜기': '[조건]에 맞는 일주일 식단을 짜줘. 하루 3끼, 장보기 목록까지 표로 정리해줘.',
+  '운동 루틴': '집에서 할 수 있는 [시간] 운동 루틴을 짜줘. 준비 운동, 본 운동, 정리 운동 순서로, 주의할 점도 알려줘.',
+  '예산 짜기': '월 [금액]으로 한 달 예산을 짜줘. 항목별로 나누고, 아낄 수 있는 곳 3개를 짚어줘.',
+  '선물 추천': '[받는 사람]에게 줄 [예산] 선물 5개를 추천해줘. 각각 왜 좋은지 한 줄씩.',
+  '시간 관리': '내 하루 [일정]을 보고 시간 관리 방법을 알려줘. 낭비되는 시간 2곳, 바꿀 습관 1개를 짚어줘.',
+  '아이디어 내기': '주제 [주제]로 참신한 아이디어 5개를 내줘. 각각 한 줄 설명과, 가장 먼저 해볼 만한 이유를 붙여줘.',
+  '사업 이름': '[하는 일]을 하는 모임/가게 이름 10개를 지어줘. 기억하기 쉽고, 뜻도 한 줄씩 알려줘.',
+  '마케팅 문구': '[제품/서비스]를 알리는 문구 5개를 써줘. 짧고, 눈에 띄게, 각각 다른 느낌으로.',
+  '설문 만들기': '[주제] 설문 질문 10개를 만들어줘. 객관식 7개, 주관식 3개로.',
+  '회의록 정리': '아래 회의 내용을 회의록으로 정리해줘. 결정된 것, 할 일(담당·기한), 다음 회의 안건을 나눠서.\n\n[여기에 내용 붙여넣기]',
+  '이력서 다듬기': '아래 이력서 내용을 다듬어줘. 성과 중심으로, 숫자를 넣을 곳을 표시하고, 어색한 문장 3개를 고쳐줘.\n\n[여기에 내용 붙여넣기]'
+};
 const TEMPLATES = {
   study: '너는 친절한 공부 코치야. [과목]을 [기간] 안에 끝낼 공부 계획을 세워줘. 하루 분량을 표로 정리하고, 매일 확인할 체크리스트도 만들어줘.',
   write: '너는 글쓰기 도우미야. 주제 [주제]로 [독자]가 읽기 좋은 글을 써줘. 첫 문장은 흥미를 끌게, 전체는 3단락으로, 마지막에 한 줄 요약을 넣어줘.',
@@ -649,10 +833,35 @@ function renderPrompts() {
     const pre = document.createElement('div'); pre.textContent = p.text; pre.style.whiteSpace = 'pre-wrap'; pre.style.marginTop = '6px';
     const copyBtn = document.createElement('button'); copyBtn.type = 'button'; copyBtn.className = 'copy'; copyBtn.textContent = '복사';
     copyBtn.addEventListener('click', () => copyText(p.text));
+    const editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.className = 'secondary'; editBtn.textContent = '수정';
+    editBtn.addEventListener('click', () => { editingIdx = idx; $('pTitle').value = p.title; $('pCat').value = p.cat; $('pText').value = p.text; $('savePrompt').textContent = '수정 저장하기 (이전 버전은 저장돼)'; document.querySelector('.topTab[data-panel="panelPrompts"]').click(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
     const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'secondary'; delBtn.textContent = '삭제';
     delBtn.addEventListener('click', () => { prompts.splice(idx, 1); saveJson(PROMPT_KEY, prompts); renderPrompts(); renderDash(); });
     div.appendChild(strong); div.appendChild(score); div.appendChild(pre);
-    div.appendChild(document.createElement('br')); div.appendChild(copyBtn); div.appendChild(delBtn);
+    const dlBtn = document.createElement('button'); dlBtn.type = 'button'; dlBtn.className = 'secondary'; dlBtn.textContent = '텍스트 저장';
+    dlBtn.addEventListener('click', () => { const blob = new Blob([p.title + '\n\n' + p.text], { type: 'text/plain;charset=utf-8' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = p.title.replace(/[^가-힣a-zA-Z0-9]+/g, '_') + '.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); });
+    const openBtn = document.createElement('button'); openBtn.type = 'button'; openBtn.className = 'secondary'; openBtn.textContent = 'AI 2곳에서 열기';
+    openBtn.addEventListener('click', () => { copyText(p.text); window.open('https://chatgpt.com/?q=' + encodeURIComponent(p.text), '_blank'); window.open('https://www.perplexity.ai/search?q=' + encodeURIComponent(p.text), '_blank'); });
+    const rateRow = document.createElement('div');
+    rateRow.textContent = '내 평가: ';
+    for (let star = 1; star <= 5; star++) {
+      const sb = document.createElement('button'); sb.type = 'button'; sb.className = 'favbtn'; sb.textContent = (p.rating || 0) >= star ? '★' : '☆';
+      sb.addEventListener('click', () => { p.rating = star; saveJson(PROMPT_KEY, prompts); renderPrompts(); });
+      rateRow.appendChild(sb);
+    }
+    const verInfo = document.createElement('span'); verInfo.className = 'small'; verInfo.textContent = ' 버전 ' + ((p.versions || []).length + 1) + '개';
+    rateRow.appendChild(verInfo);
+    div.appendChild(rateRow);
+    (p.versions || []).forEach((v, vi) => {
+      const vb = document.createElement('button'); vb.type = 'button'; vb.className = 'favbtn'; vb.textContent = '이전 버전 ' + (vi + 1) + ' 보기';
+      vb.addEventListener('click', () => { p.text = v.text; saveJson(PROMPT_KEY, prompts); renderPrompts(); });
+      div.appendChild(vb);
+    });
+    const cmpBtn = document.createElement('button'); cmpBtn.type = 'button'; cmpBtn.className = 'secondary'; cmpBtn.textContent = '3곳 비교 열기';
+    cmpBtn.addEventListener('click', () => { copyText(p.text); window.open('https://chatgpt.com/?q=' + encodeURIComponent(p.text), '_blank'); window.open('https://www.perplexity.ai/search?q=' + encodeURIComponent(p.text), '_blank'); window.open('https://gemini.google.com/app', '_blank'); logCompare(p.title); });
+    const shareBtn = document.createElement('button'); shareBtn.type = 'button'; shareBtn.className = 'secondary'; shareBtn.textContent = '공유 링크 복사';
+    shareBtn.addEventListener('click', () => { const b64 = window.btoa(unescape(encodeURIComponent(JSON.stringify({ t: p.title, x: p.text })))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); copyText(location.origin + location.pathname + '#p=' + b64); });
+    div.appendChild(document.createElement('br')); div.appendChild(copyBtn); div.appendChild(editBtn); div.appendChild(dlBtn); div.appendChild(openBtn); div.appendChild(cmpBtn); div.appendChild(shareBtn); div.appendChild(delBtn);
     list.appendChild(div);
   });
 }
@@ -660,6 +869,7 @@ function renderSubs() {
   const list = $('subList'); if (!list) return;
   const total = subs.reduce((a, b) => a + (Number(b.price) || 0), 0);
   $('subTotal').textContent = total.toLocaleString('ko-KR') + '원';
+  if ($('subYearly')) $('subYearly').textContent = (total * 12).toLocaleString('ko-KR') + '원';
   list.innerHTML = '';
   if (!subs.length) { list.innerHTML = '<p class="small">등록한 구독이 없어.</p>'; return; }
   const sorted = subs.slice().sort((a, b) => (a.day || '9999').localeCompare(b.day || '9999'));
@@ -669,7 +879,7 @@ function renderSubs() {
     const strong = document.createElement('strong'); strong.textContent = sb.name + ' · ' + sb.cat;
     let days = '';
     if (sb.day) { const d = Math.ceil((new Date(sb.day + 'T00:00:00') - new Date()) / 86400000); days = d >= 0 ? ' · 갱신까지 ' + d + '일' : ' · 갱신일 지남'; }
-    const info = document.createElement('span'); info.textContent = '월 ' + (Number(sb.price) || 0).toLocaleString('ko-KR') + '원' + days + ' · 사용 ' + (sb.uses || 0) + '회' + ((sb.uses || 0) > 0 ? ' · 1회당 ' + Math.round((Number(sb.price) || 0) / sb.uses).toLocaleString('ko-KR') + '원' : '');
+    const info = document.createElement('span'); info.textContent = '월 ' + (Number(sb.price) || 0).toLocaleString('ko-KR') + '원' + days + ' · 사용 ' + (sb.uses || 0) + '회' + ((sb.uses || 0) > 0 ? ' · 1회당 ' + Math.round((Number(sb.price) || 0) / sb.uses).toLocaleString('ko-KR') + '원' : ' · 안 쓰는 구독? 해지 후보야');
     const useBtn = document.createElement('button'); useBtn.type = 'button'; useBtn.className = 'copy'; useBtn.textContent = '사용 기록 +1';
     useBtn.addEventListener('click', () => { sb.uses = (sb.uses || 0) + 1; saveJson(SUB_KEY, subs); renderSubs(); renderDash(); });
     const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'secondary'; delBtn.textContent = '삭제';
@@ -685,27 +895,43 @@ function renderDash() {
   let copies = 0; try { copies = (JSON.parse(localStorage.getItem('ai_mgmt_stats_v1') || '{}').copies || 0); } catch (e) {}
   $('statPrompts').textContent = prompts.length;
   $('statFavs').textContent = favs.length;
-  $('statSubs').textContent = subs.length;
-  $('statCost').textContent = total.toLocaleString('ko-KR') + '원';
+  if ($('statSubs')) $('statSubs').textContent = subs.length;
+  if ($('statCost')) $('statCost').textContent = total.toLocaleString('ko-KR') + '원';
   $('statCopies').textContent = copies;
   $('statSites').textContent = AI_SITES.length + customAis.length;
-  const soon = subs.filter((sb) => sb.day && Math.ceil((new Date(sb.day + 'T00:00:00') - new Date()) / 86400000) <= 7);
-  $('dashRenewal').innerHTML = soon.length ? soon.map((sb) => '<p>· ' + sb.name + ' — ' + sb.day + '</p>').join('') : '<p class="small">7일 안에 갱신되는 구독이 없어.</p>';
+  renderHistory(); renderWeek();
+  const qf = $('quickFavs');
+  if (qf) {
+    const favSites = AI_SITES.concat(customAis).filter((x) => favs.includes(x.name));
+    qf.innerHTML = favSites.length ? favSites.map((x) => '<a href="' + x.url + '" target="_blank" rel="noopener" style="display:inline-block;margin:4px 6px 0 0;background:#0f172a;color:#fff;padding:9px 12px;border-radius:10px;text-decoration:none;font-weight:700">' + x.name + '</a>').join('') : '<p class="small">즐겨찾기가 없어. AI 카드에서 ★를 눌러봐.</p>';
+  }
+  if ($('dashRenewal')) {
+    const soon = subs.filter((sb) => sb.day && Math.ceil((new Date(sb.day + 'T00:00:00') - new Date()) / 86400000) <= 7);
+    $('dashRenewal').innerHTML = soon.length ? soon.map((sb) => '<p>· ' + sb.name + ' — ' + sb.day + '</p>').join('') : '<p class="small">7일 안에 갱신되는 구독이 없어.</p>';
+  }
 }
 function loadNewFeatures() {
   prompts = loadJson(PROMPT_KEY, []); subs = loadJson(SUB_KEY, []); favs = loadJson(FAV_KEY, []); customAis = loadJson(CUSTOM_KEY, []);
-  renderPrompts(); renderSubs(); renderDash();
+  renderPrompts(); renderSubs(); renderDash(); renderCompare();
 }
 document.querySelectorAll('.chip[data-tpl]').forEach((b) => {
   b.addEventListener('click', () => { $('pText').value = TEMPLATES[b.dataset.tpl] || ''; if (!$('pTitle').value) $('pTitle').value = b.textContent + ' 프롬프트'; });
 });
 $('savePrompt').addEventListener('click', () => {
   const text = $('pText').value.trim(); if (!text) { alert('프롬프트 내용을 적어주세요.'); return; }
-  prompts.unshift({ title: $('pTitle').value.trim() || '제목 없는 프롬프트', cat: $('pCat').value, text: text });
+  if (editingIdx !== null && prompts[editingIdx]) {
+    const old = prompts[editingIdx];
+    old.versions = old.versions || [];
+    if (old.text !== text) old.versions.push({ text: old.text, t: Date.now() });
+    old.title = $('pTitle').value.trim() || '제목 없는 프롬프트'; old.cat = $('pCat').value; old.text = text;
+    editingIdx = null; $('savePrompt').textContent = '프롬프트 저장하기';
+  } else {
+    prompts.unshift({ title: $('pTitle').value.trim() || '제목 없는 프롬프트', cat: $('pCat').value, text: text, versions: [], rating: 0 });
+  }
   saveJson(PROMPT_KEY, prompts); $('pTitle').value = ''; $('pText').value = ''; renderPrompts(); renderDash();
 });
 $('promptSearch').addEventListener('input', renderPrompts);
-$('addSub').addEventListener('click', () => {
+if ($('addSub')) $('addSub').addEventListener('click', () => {
   const name = $('subName').value.trim(); if (!name) { alert('서비스 이름을 적어주세요.'); return; }
   subs.push({ name: name, price: Number($('subPrice').value.replace(/[^0-9]/g, '')) || 0, day: $('subDay').value, cat: $('subCat').value, uses: 0 });
   saveJson(SUB_KEY, subs); $('subName').value = ''; $('subPrice').value = ''; $('subDay').value = ''; renderSubs(); renderDash();
@@ -726,17 +952,199 @@ document.querySelectorAll('.topTab').forEach((b) => {
   b.addEventListener('click', () => {
     document.querySelectorAll('.topTab').forEach((x) => x.classList.remove('active'));
     b.classList.add('active');
-    ['panelAi','panelDash','panelPrompts','panelSubs','panelProfile','panelRules','panelAcc','panelManual'].forEach((id) => {
+    ['panelAi','panelDash','panelPrompts','panelLinks','panelProfile','panelRules','panelAcc','panelManual'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) el.classList.toggle('hidden', id !== b.dataset.panel);
     });
     if (b.dataset.panel === 'panelDash') renderDash();
     if (b.dataset.panel === 'panelPrompts') renderPrompts();
-    if (b.dataset.panel === 'panelSubs') renderSubs();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 });
 
+// 연속 방문 일수
+(function () {
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const yest = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    let v = JSON.parse(localStorage.getItem('ai_mgmt_visit_v1') || '{}');
+    if (v.last === today) { /* 오늘 이미 셈 */ }
+    else if (v.last === yest) { v.streak = (v.streak || 0) + 1; v.last = today; }
+    else { v.streak = 1; v.last = today; }
+    localStorage.setItem('ai_mgmt_visit_v1', JSON.stringify(v));
+    if ($('statStreak')) $('statStreak').textContent = v.streak;
+  } catch (e) {}
+})();
+// 전체 검색
+$('dashSearch').addEventListener('input', () => {
+  const q = ($('dashSearch').value || '').trim().toLowerCase();
+  const out = $('dashSearchOut');
+  if (!q) { out.innerHTML = ''; return; }
+  const hits = [];
+  prompts.forEach((x) => { if ((x.title + ' ' + x.text).toLowerCase().includes(q)) hits.push('프롬프트: ' + x.title); });
+  subs.forEach((x) => { if (x.name.toLowerCase().includes(q)) hits.push('구독: ' + x.name); });
+  AI_SITES.concat(customAis).forEach((x) => { if ((x.name + ' ' + x.desc).toLowerCase().includes(q)) hits.push('AI: ' + x.name); });
+  out.innerHTML = hits.length ? hits.slice(0, 10).map((h) => '<p class="small">· ' + h + '</p>').join('') : '<p class="small">검색 결과가 없어.</p>';
+});
+// 템플릿 30개
+(function () {
+  const sel = $('tplSelect');
+  Object.keys(TEMPLATES30).forEach((k) => { const o = document.createElement('option'); o.value = k; o.textContent = k; sel.appendChild(o); });
+  $('loadTpl').addEventListener('click', () => { $('pText').value = TEMPLATES30[sel.value] || ''; if (!$('pTitle').value) $('pTitle').value = sel.value + ' 프롬프트'; });
+})();
+// 보관함 CSV 내보내기
+$('exportPromptsCsv').addEventListener('click', () => {
+  const rows = [['제목', '분야', '내용']].concat(prompts.map((x) => [x.title, x.cat, x.text.replace(/\n/g, ' ')]));
+  const csv = rows.map((r) => r.map((c) => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'prompts.csv'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+// ---- 링크 저장함 + URL 단축 ----
+const LINKS_KEY = 'ai_mgmt_links_v1';
+let links = loadJson(LINKS_KEY, []);
+function shareLinkFor(url) {
+  const b64 = window.btoa(unescape(encodeURIComponent(url))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  return location.origin + location.pathname + '#go=' + b64;
+}
+function renderLinks() {
+  const list = $('linkList'); if (!list) return;
+  const q = ($('linkSearch').value || '').trim().toLowerCase();
+  list.innerHTML = '';
+  const shown = links.filter((l) => !q || (l.title + ' ' + (l.memo || '')).toLowerCase().includes(q));
+  if (!shown.length) { list.innerHTML = '<p class="small">저장한 링크가 없어.</p>'; return; }
+  shown.forEach((l) => {
+    const idx = links.indexOf(l);
+    const div = document.createElement('div'); div.className = 'item';
+    const strong = document.createElement('strong'); strong.textContent = l.title;
+    const span = document.createElement('span'); span.textContent = (l.memo ? l.memo + ' · ' : '') + l.url;
+    const openA = document.createElement('a'); openA.href = l.url; openA.target = '_blank'; openA.rel = 'noopener'; openA.textContent = '열기';
+    openA.style.cssText = 'display:inline-block;margin:6px 6px 0 0;background:#0f172a;color:#fff;padding:9px 12px;border-radius:10px;text-decoration:none;font-weight:700';
+    const shareBtn = document.createElement('button'); shareBtn.type = 'button'; shareBtn.className = 'copy'; shareBtn.textContent = '공유 링크 복사';
+    shareBtn.addEventListener('click', () => copyText(shareLinkFor(l.url)));
+    const copyBtn = document.createElement('button'); copyBtn.type = 'button'; copyBtn.className = 'copy'; copyBtn.textContent = '주소 복사';
+    copyBtn.addEventListener('click', () => copyText(l.url));
+    const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.className = 'secondary'; delBtn.textContent = '삭제';
+    delBtn.addEventListener('click', () => { links.splice(idx, 1); saveJson(LINKS_KEY, links); renderLinks(); });
+    div.appendChild(strong); div.appendChild(document.createElement('br')); div.appendChild(span);
+    div.appendChild(document.createElement('br')); div.appendChild(openA); div.appendChild(shareBtn); div.appendChild(copyBtn); div.appendChild(delBtn);
+    list.appendChild(div);
+  });
+}
+let lastShort = '';
+$('saveLink').addEventListener('click', () => {
+  const url = $('linkUrl').value.trim();
+  if (!url) { alert('주소를 적어주세요.'); return; }
+  if (!/^https?:\/\//.test(url)) { alert('주소는 https:// 로 시작해야 해.'); return; }
+  links.unshift({ title: $('linkTitle').value.trim() || url, url: url, memo: $('linkMemo').value.trim() });
+  saveJson(LINKS_KEY, links); $('linkTitle').value = ''; $('linkUrl').value = ''; $('linkMemo').value = ''; renderLinks();
+});
+$('linkSearch').addEventListener('input', renderLinks);
+$('shortenBtn').addEventListener('click', async () => {
+  const url = $('shortUrl').value.trim();
+  if (!url) { alert('줄일 주소를 적어주세요.'); return; }
+  if (!/^https?:\/\//.test(url)) { alert('주소는 https:// 로 시작해야 해.'); return; }
+  $('shortOut').textContent = '줄이는 중...';
+  try {
+    const res = await fetch('https://is.gd/create.php?format=json&url=' + encodeURIComponent(url));
+    const data = await res.json();
+    if (data && data.shorturl) { lastShort = data.shorturl; $('shortOut').textContent = lastShort + ' (is.gd 단축)'; return; }
+    throw new Error('no shorturl');
+  } catch (e) {
+    lastShort = shareLinkFor(url);
+    $('shortOut').textContent = lastShort + ' (is.gd가 안 돼서 intaim 공유 링크로 만들었어. 이 링크를 열면 원래 주소로 이동해.)';
+  }
+});
+$('copyShort').addEventListener('click', () => { if (!lastShort) { alert('먼저 주소를 줄여주세요.'); return; } copyText(lastShort); });
+renderLinks();
+// ---- AI 비교 기록 ----
+const COMPARE_KEY = 'ai_mgmt_compare_v1';
+function logCompare(title) {
+  let c = []; try { c = JSON.parse(localStorage.getItem(COMPARE_KEY) || '[]'); } catch (e) {}
+  c.unshift({ title: title, t: Date.now(), winner: '' });
+  try { localStorage.setItem(COMPARE_KEY, JSON.stringify(c.slice(0, 10))); } catch (e) {}
+  renderCompare();
+}
+function renderCompare() {
+  const el = $('compareList'); if (!el) return;
+  let c = []; try { c = JSON.parse(localStorage.getItem(COMPARE_KEY) || '[]'); } catch (e) {}
+  if (!c.length) { el.innerHTML = '<p class="small">아직 비교한 기록이 없어. 프롬프트 보관함에서 "3곳 비교"를 눌러봐.</p>'; return; }
+  el.innerHTML = '';
+  c.forEach((item, i) => {
+    const div = document.createElement('div'); div.className = 'item';
+    const strong = document.createElement('strong'); strong.textContent = item.title + ' · ' + new Date(item.t).toLocaleString('ko-KR');
+    const sel = document.createElement('select'); sel.style.marginTop = '8px';
+    ['승자를 골라봐', 'ChatGPT가 제일 좋았어', 'Perplexity가 제일 좋았어', 'Gemini가 제일 좋았어', '다 비슷했어'].forEach((opt) => { const o = document.createElement('option'); o.textContent = opt; if (item.winner === opt) o.selected = true; sel.appendChild(o); });
+    sel.addEventListener('change', () => { item.winner = sel.value; try { localStorage.setItem(COMPARE_KEY, JSON.stringify(c)); } catch (e) {} });
+    div.appendChild(strong); div.appendChild(document.createElement('br')); div.appendChild(sel);
+    el.appendChild(div);
+  });
+}
+// ---- 어려운 말 풀이 ----
+const EASY_WORDS = { '프롬프트': 'AI에게 시키는 말. "이렇게 해줘"라고 적는 지시문이야.', 'LLM': '거대 언어 모델. 글을 읽고 쓰는 AI야.', '토큰': 'AI가 글을 세는 단위. 단어 하나가 토큰 하나쯤 돼.', '컨텍스트': 'AI가 지금 참고하는 앞뒤 문맥, 배경 정보야.', '할루시네이션': 'AI가 모르는 걸 그럴듯하게 지어내는 거야.', '파인튜닝': '이미 있는 AI를 특정 일에 맞게 추가로 연습시키는 거야.', 'API': '프로그램끼리 말을 주고받는 창구야.', '파라미터': 'AI 안에 있는 조절 값. 많을수록 보통 더 똑똑해.', '추론': 'AI가 생각해서 답을 찾아내는 과정이야.', '생성': 'AI가 새로 만드는 거야. 글, 그림, 음악을 만들어내.', '임베딩': '말의 뜻을 숫자로 바꿔서 저장하는 방식이야.', '모델': 'AI의 두뇌 프로그램. ChatGPT, Claude 같은 게 모델이야.', 'RAG': 'AI가 답하기 전에 자료를 찾아보고 답하는 방식이야.', '에이전트': '스스로 계획 세워서 일을 처리하는 AI야.', '워크플로': '일을 순서대로 처리하는 흐름, 절차야.', '구독': '매달 돈을 내고 쓰는 방식이야.', '프리미엄': '돈 내고 쓰는 고급 버전이야.', '베타': '아직 다 안 된 시험 버전이야.', 'UI': '화면에서 보고 누르는 부분이야.', 'UX': '쓰면서 느끼는 편함, 사용 경험이야.' };
+$('easyBtn').addEventListener('click', () => {
+  const text = $('easyInput').value.trim();
+  if (!text) { alert('풀어줄 글을 붙여넣어주세요.'); return; }
+  const found = Object.keys(EASY_WORDS).filter((w) => text.includes(w));
+  const sentences = text.split(/(?<=[.!?\n])/).map((x) => x.trim()).filter(Boolean).slice(0, 3);
+  let out = '핵심 3줄:\n' + (sentences.length ? sentences.map((x, i) => (i + 1) + '. ' + x).join('\n') : '글이 너무 짧아.') + '\n\n어려운 말 풀이:\n';
+  out += found.length ? found.map((w) => '- ' + w + ': ' + EASY_WORDS[w]).join('\n') : '어려운 말이 안 보여. (아직 등록된 말만 풀 수 있어.)';
+  $('easyOut').textContent = out;
+});
+$('copyShared').addEventListener('click', () => { if (window.__sharedPrompt) copyText(window.__sharedPrompt); });
+renderCompare();
+// 다크 모드
+function applyTheme() {
+  const dark = localStorage.getItem('ai_mgmt_theme') === 'dark';
+  document.body.classList.toggle('dark', dark);
+  $('darkBtn').textContent = dark ? '라이트 모드' : '다크 모드';
+}
+$('darkBtn').addEventListener('click', () => {
+  localStorage.setItem('ai_mgmt_theme', document.body.classList.contains('dark') ? 'light' : 'dark');
+  applyTheme();
+});
+applyTheme();
+document.querySelectorAll('.goalTask').forEach((x) => x.addEventListener('change', () => { updateGoalProgress(); saveData(); }));
+// 전부 백업 / 가져오기
+$('backupBtn').addEventListener('click', () => {
+  saveData();
+  const all = {};
+  [KEY, ACC_KEY, PROMPT_KEY, SUB_KEY, FAV_KEY, CUSTOM_KEY, LINKS_KEY, 'ai_mgmt_stats_v1', 'ai_mgmt_history_v1', 'ai_mgmt_adsense_v1', 'ai_mgmt_theme'].forEach((k) => { const v = localStorage.getItem(k); if (v) all[k] = v; });
+  const blob = new Blob([JSON.stringify(all)], { type: 'application/json;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'ai-management-backup.json'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+$('importAllFile').addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const all = JSON.parse(reader.result);
+      Object.keys(all).forEach((k) => localStorage.setItem(k, all[k]));
+      loadNewFeatures(); restore(); renderAi(); renderAds(); alert('백업을 가져왔어.');
+    } catch (err) { alert('백업 파일이 아니야. 내보낸 파일만 가져올 수 있어.'); }
+  };
+  reader.readAsText(file);
+});
+// AdSense 게시자 ID
+function renderAds() {
+  const pub = localStorage.getItem('ai_mgmt_adsense_v1') || '';
+  if ($('adsensePub')) $('adsensePub').value = pub;
+  const msg = pub ? '광고 준비됨 (' + pub + ')' : '광고 자리 — AdSense 승인 후 표시돼';
+  ['adSlotDash', 'adSlotAi'].forEach((id) => { const el = $(id); if (el) el.textContent = msg; });
+  if (pub && !document.querySelector('script[data-adsense]')) {
+    const sc = document.createElement('script'); sc.async = true; sc.setAttribute('data-adsense', '1');
+    sc.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(pub);
+    sc.crossOrigin = 'anonymous'; document.head.appendChild(sc);
+  }
+}
+$('saveAds').addEventListener('click', () => {
+  const v = $('adsensePub').value.trim();
+  if (v && !v.startsWith('pub-')) { alert('게시자 ID는 pub-로 시작해.'); return; }
+  localStorage.setItem('ai_mgmt_adsense_v1', v); renderAds(); alert(v ? '저장했어. AdSense 승인 후에 광고가 나와.' : '지웠어.');
+});
+renderAds();
 loadNewFeatures();
 restore();
 $('manualOut').textContent = buildManual();
